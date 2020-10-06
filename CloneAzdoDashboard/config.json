@@ -1,0 +1,27 @@
+{
+  "SourceTeamProjectBaseUri": "https://dev.azure.com/dah-dah/Default",
+  "TargetTeamProjectBaseUri": "https://dev.azure.com/dah-dah/Project Awesome",
+  "SourcePatKey": "",
+  "TargetPatKey": "",
+
+  "SourceTeamName": "Default Team",
+  "SourceDashboardName": "Overview",
+
+  "TargetTeamName": "Project Awesome Team",
+  "TargetDashboardName": "Overview 43",
+
+  "DeleteTargetDashboardIfExists": true,
+  //"UseSourceWhenAvailable": true,
+
+  "Queries": {
+    "PathFind": "My Folder",
+    "PathReplace": "Your Folder",
+
+    "QueryFindAndReplace": [
+      {
+        "Find": "[System.WorkItemType] <> ''",
+        "Replace": "[System.WorkItemType] = 'Epic'"
+      }
+    ]
+  }
+}
