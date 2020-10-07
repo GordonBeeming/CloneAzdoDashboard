@@ -5,21 +5,21 @@ using Newtonsoft.Json;
 
 namespace CloneAzdoDashboard.WidgetProcessors
 {
-  public class QueryScalarWidgetProcessor : BaseWidgetProcessor
+  public class WitChartWidgetProcessor : BaseWidgetProcessor
   {
-    public override string ContributionId => "ms.vss-dashboards-web.Microsoft.VisualStudioOnline.Dashboards.QueryScalarWidget";
+    public override string ContributionId => "ms.vss-dashboards-web.Microsoft.VisualStudioOnline.Dashboards.WitChartWidget";
 
     public override void Run(DashboardInfo_Widget1 widget, AppConfig appConfig)
     {
       WorkItemQuery targetQuery;
-      var settings = JsonConvert.DeserializeObject<QueryScalarWidgetSettings>(widget.settings);
+      var settings = JsonConvert.DeserializeObject<WitChartWidgetSettings>(widget.settings);
       targetQuery = QueryTools.CopyQuery(new CopyQueryParameters
       {
-        QueryId = settings.queryId,
+        QueryId = settings.groupKey,
         QueryReplacements = appConfig.Queries,
       });
-      settings.queryId = targetQuery.id;
-      settings.queryName = targetQuery.name;
+      settings.groupKey = targetQuery.id;
+      settings.transformOptions.filter = targetQuery.id;
       widget.settings = JsonConvert.SerializeObject(settings);
     }
   }

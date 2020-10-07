@@ -14,6 +14,7 @@ namespace CloneAzdoDashboard
     static List<BaseWidgetProcessor> WidgetProcessors => new List<BaseWidgetProcessor> {
     new QueryScalarWidgetProcessor(),
     new WitViewWidgetProcessor(),
+    new WitChartWidgetProcessor(),
     };
 
     static void Main(string[] args)

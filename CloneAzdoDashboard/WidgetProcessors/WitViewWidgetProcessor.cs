@@ -12,15 +12,15 @@ namespace CloneAzdoDashboard.WidgetProcessors
     public override void Run(DashboardInfo_Widget1 widget, AppConfig appConfig)
     {
       WorkItemQuery targetQuery;
-      var querySettings = JsonConvert.DeserializeObject<WitViewWidgetSettings>(widget.settings);
+      var settings = JsonConvert.DeserializeObject<WitViewWidgetSettings>(widget.settings);
       targetQuery = QueryTools.CopyQuery(new CopyQueryParameters
       {
-        QueryId = querySettings.query.queryId,
+        QueryId = settings.query.queryId,
         QueryReplacements = appConfig.Queries,
       });
-      querySettings.query.queryId = targetQuery.id;
-      querySettings.query.queryName = targetQuery.name;
-      widget.settings = JsonConvert.SerializeObject(querySettings);
+      settings.query.queryId = targetQuery.id;
+      settings.query.queryName = targetQuery.name;
+      widget.settings = JsonConvert.SerializeObject(settings);
     }
   }
 }
