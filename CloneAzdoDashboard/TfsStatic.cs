@@ -234,9 +234,10 @@ namespace CloneAzdoDashboard
       return Post<WorkItemQuery>(GetUrl(source, false, $"/_apis/wit/queries/{queryPath}?api-version=6.0"), workItemQuery, GetAuthorizationHeader(source));
     }
 
-    public static WorkItemQuery UpdateWorkItemQuery(bool source, string queryPath, WorkItemQuery workItemQuery)
+    public static WorkItemQuery UpdateWorkItemQuery(bool source, WorkItemQuery workItemQuery)
     {
-      return Post<WorkItemQuery>(GetUrl(source, false, $"/_apis/wit/queries/{queryPath}?api-version=6.0"), workItemQuery, GetAuthorizationHeader(source));
+      workItemQuery.path += $"/{workItemQuery.name}";
+      return Patch<WorkItemQuery>(GetUrl(source, false, $"/_apis/wit/queries/{workItemQuery.id}?api-version=6.0"), workItemQuery, GetAuthorizationHeader(source));
     }
 
     //public static void DeleteDashboard(bool source, string teamName, string dashboardId)

@@ -28,7 +28,7 @@ namespace CloneAzdoDashboard.Tools
           {
             queryExistsAlready = true;
             sourceQuery.id = targetQuery.id;
-            targetQuery = TfsStatic.UpdateWorkItemQuery(false, targetQueryInfo.FolderId, sourceQuery);
+            targetQuery = TfsStatic.UpdateWorkItemQuery(false, sourceQuery);
           }
           else
           {
@@ -61,10 +61,11 @@ namespace CloneAzdoDashboard.Tools
           if (!string.IsNullOrEmpty(item.Find) && !string.IsNullOrEmpty(item.Replace))
           {
             var findIndex = sourceQuery.wiql.IndexOf(item.Find, StringComparison.InvariantCultureIgnoreCase);
-            if (findIndex > -1)
+            while (findIndex > -1)
             {
               sourceQuery.wiql = sourceQuery.wiql.Remove(findIndex, item.Find.Length);
               sourceQuery.wiql = sourceQuery.wiql.Insert(findIndex, item.Replace);
+              findIndex = sourceQuery.wiql.IndexOf(item.Find, StringComparison.InvariantCultureIgnoreCase);
             }
           }
         }
@@ -78,10 +79,11 @@ namespace CloneAzdoDashboard.Tools
       if (!string.IsNullOrEmpty(replacementParameters.PathFind) && !string.IsNullOrEmpty(replacementParameters.PathReplace))
       {
         var findIndex = targetQueryFolder.FolderPath.IndexOf(replacementParameters.PathFind, StringComparison.InvariantCultureIgnoreCase);
-        if (findIndex > -1)
+        while (findIndex > -1)
         {
           targetQueryFolder.FolderPath = targetQueryFolder.FolderPath.Remove(findIndex, replacementParameters.PathFind.Length);
           targetQueryFolder.FolderPath = targetQueryFolder.FolderPath.Insert(findIndex, replacementParameters.PathReplace);
+          findIndex = targetQueryFolder.FolderPath.IndexOf(replacementParameters.PathFind, StringComparison.InvariantCultureIgnoreCase);
         }
       }
       targetQueryFolder.QueryName = targetQueryFolder.FolderPath.Remove(0, targetQueryFolder.FolderPath.LastIndexOf('/') + 1);
