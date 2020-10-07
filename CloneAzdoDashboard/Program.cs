@@ -12,14 +12,14 @@ namespace CloneAzdoDashboard
     static AppConfig config = null;
 
     static List<BaseWidgetProcessor> WidgetProcessors => new List<BaseWidgetProcessor> {
-    new QueryScalarWidgetProcessor(),
-    new WitViewWidgetProcessor(),
-    new WitChartWidgetProcessor(),
+      new QueryScalarWidgetProcessor(),
+      new WitViewWidgetProcessor(),
+      new WitChartWidgetProcessor(),
     };
 
     static void Main(string[] args)
     {
-      if (!LoadConfig())
+      if (!LoadConfig(args))
       {
         return;
       }
@@ -108,15 +108,20 @@ namespace CloneAzdoDashboard
 
     #region fluff
 
-    private static bool LoadConfig()
+    private static bool LoadConfig(string[] args)
     {
-      SetConsoleThings();
-      if (!File.Exists(".\\config.json"))
+      var fileName = "config.json";
+      if (args != null && args.Length > 0)
       {
-        WriteLine("config.json is missing!", ConsoleColor.Red);
+        fileName = args[0].Trim('\"').Trim('\'');
+      }
+      SetConsoleThings();
+      if (!File.Exists($".\\{fileName}"))
+      {
+        WriteLine($"{fileName} is missing!", ConsoleColor.Red);
         return false;
       }
-      config = JsonConvert.DeserializeObject<AppConfig>(File.ReadAllText(".\\config.json"));
+      config = JsonConvert.DeserializeObject<AppConfig>(File.ReadAllText($".\\{fileName}"));
 
       TfsStatic.SourceTeamProjectBaseUri = config.SourceTeamProjectBaseUri;
       TfsStatic.TargetTeamProjectBaseUri = config.TargetTeamProjectBaseUri;
