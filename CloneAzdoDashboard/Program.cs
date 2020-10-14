@@ -15,6 +15,7 @@ namespace CloneAzdoDashboard
       new QueryScalarWidgetProcessor(),
       new WitViewWidgetProcessor(),
       new WitChartWidgetProcessor(),
+      new MarkdownWidgetProcessor(),
     };
 
     static void Main(string[] args)

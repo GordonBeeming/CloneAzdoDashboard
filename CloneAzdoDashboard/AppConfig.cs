@@ -1,4 +1,5 @@
 ﻿using CloneAzdoDashboard.Tools.Parameters;
+using System.Collections.Generic;
 
 namespace CloneAzdoDashboard
 {
@@ -16,6 +17,8 @@ namespace CloneAzdoDashboard
     //public bool UseSourceWhenAvailable { get; set; }
 
     public QueryReplacementParameters Queries { get; set; }
+
+    public List<FindAndReplace> MarkdownFindAndReplace { get; set; } = new List<FindAndReplace>();
   }
 
 }

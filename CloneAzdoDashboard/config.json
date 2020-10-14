@@ -23,5 +23,12 @@
         "Replace": "[System.WorkItemType] = 'Epic'"
       }
     ]
-  }
+  },
+
+  "MarkdownFindAndReplace": [
+    {
+      "Find": null,
+      "Replace": null
+    }
+  ]
 }
