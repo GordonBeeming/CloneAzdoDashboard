@@ -66,10 +66,17 @@ namespace CloneAzdoDashboard
 
       WriteLine();
       WriteLine();
-      DeleteDashboardIfExists();
-      Write($"Creating dashboard '{config.TargetDashboardName}' in the team '{config.TargetTeamName}'...");
-      TfsStatic.CreateDashboard(false, config.TargetTeamName, dashboardInfo);
-      WriteLine("Done!", ConsoleColor.Green);
+      if (config.UpdateQueriesOnly)
+      {
+        WriteLine($"Skipping dashboard creation, UpdateQueriesOnly=true.");
+      }
+      else
+      {
+        DeleteDashboardIfExists();
+        Write($"Creating dashboard '{config.TargetDashboardName}' in the team '{config.TargetTeamName}'...");
+        TfsStatic.CreateDashboard(false, config.TargetTeamName, dashboardInfo);
+        WriteLine("Done!", ConsoleColor.Green);
+      }
     }
 
     private static void DeleteDashboardIfExists()

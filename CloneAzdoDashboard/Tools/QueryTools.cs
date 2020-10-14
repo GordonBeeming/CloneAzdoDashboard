@@ -59,8 +59,9 @@ namespace CloneAzdoDashboard.Tools
       var pattern = @"\s<id:\w+-\w+-\w+-\w+-\w+>";
       var regex = new Regex(pattern);
       var matches = regex.Matches(sourceQuery.wiql);
-      foreach (Match match in matches)
+      for (int i = matches.Count - 1; i >= 0; i--)
       {
+        Match match = matches[i];
         if (match.Success)
         {
           sourceQuery.wiql = sourceQuery.wiql.Remove(match.Index, match.Length);

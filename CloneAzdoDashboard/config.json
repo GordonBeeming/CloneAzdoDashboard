@@ -10,8 +10,9 @@
   "TargetTeamName": "Project Awesome Team",
   "TargetDashboardName": "Overview 43",
 
+  "UpdateQueriesOnly": true,
+
   "DeleteTargetDashboardIfExists": true,
-  //"UseSourceWhenAvailable": true,
 
   "Queries": {
     "PathFind": "My Folder",

@@ -15,6 +15,7 @@ namespace CloneAzdoDashboard
     public string TargetDashboardName { get; set; }
     public bool DeleteTargetDashboardIfExists { get; set; }
     //public bool UseSourceWhenAvailable { get; set; }
+    public bool UpdateQueriesOnly { get; set; }
 
     public QueryReplacementParameters Queries { get; set; }
 
