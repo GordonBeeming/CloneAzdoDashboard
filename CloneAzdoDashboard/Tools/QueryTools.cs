@@ -1,6 +1,7 @@
 ﻿using CloneAzdoDashboard.Tools.Parameters;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace CloneAzdoDashboard.Tools
 {
@@ -16,6 +17,7 @@ namespace CloneAzdoDashboard.Tools
       sourceQuery.name = targetQueryInfo.QueryName;
       sourceQuery.path = targetQueryInfo.FolderPath;
       FindAndReplaceInWiql(parameters, sourceQuery);
+      RemoveTeamAreaId(sourceQuery);
 
       var queryExistsAlready = false;
       try
@@ -50,6 +52,20 @@ namespace CloneAzdoDashboard.Tools
       }
 
       return targetQuery;
+    }
+
+    private static void RemoveTeamAreaId(WorkItemQuery sourceQuery)
+    {
+      var pattern = @"\s<id:\w+-\w+-\w+-\w+-\w+>";
+      var regex = new Regex(pattern);
+      var matches = regex.Matches(sourceQuery.wiql);
+      foreach (Match match in matches)
+      {
+        if (match.Success)
+        {
+          sourceQuery.wiql = sourceQuery.wiql.Remove(match.Index, match.Length);
+        }
+      }
     }
 
     private static void FindAndReplaceInWiql(CopyQueryParameters parameters, WorkItemQuery sourceQuery)
