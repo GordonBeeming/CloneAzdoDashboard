@@ -1,9 +1,9 @@
-﻿using CloneAzdoDashboard.WidgetProcessors;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CloneAzdoDashboard.WidgetProcessors;
+using Newtonsoft.Json;
 
 namespace CloneAzdoDashboard
 {
@@ -46,6 +46,9 @@ namespace CloneAzdoDashboard
         return;
       }
       WriteLine($"Source Dashboard: {dashboard.name} ({dashboard.id})");
+      WriteLine($"Target Dashboard: {config.TargetDashboardName}");
+      WriteLine($"Source Team Name: {config.SourceTeamName}");
+      WriteLine($"Target Team Name: {config.TargetTeamName}");
       var dashboardInfo = TfsStatic.GetDashboard(true, config.SourceTeamName, dashboard.id);
       dashboardInfo.name = config.TargetDashboardName;
 
@@ -74,7 +77,18 @@ namespace CloneAzdoDashboard
       {
         DeleteDashboardIfExists();
         Write($"Creating dashboard '{config.TargetDashboardName}' in the team '{config.TargetTeamName}'...");
-        TfsStatic.CreateDashboard(false, config.TargetTeamName, dashboardInfo);
+        var newDashboardInfo = TfsStatic.CreateDashboard(false, config.TargetTeamName, dashboardInfo);
+        var teamNameUrl = config.TargetTeamName.Replace(" ", "%20");
+        if (newDashboardInfo.url.IndexOf(teamNameUrl) > -1)
+        {
+          var url = newDashboardInfo.url.Remove(newDashboardInfo.url.IndexOf(teamNameUrl), teamNameUrl.Length + 1);
+          url = url.Replace("_apis/Dashboard/Dashboards", "_dashboards/dashboard");
+          WriteLine(url);
+        }
+        else if (newDashboardInfo.url.IndexOf("/") > -1)
+        {
+          WriteLine(newDashboardInfo.url.Remove(0, newDashboardInfo.url.LastIndexOf("/") + 1));
+        }
         WriteLine("Done!", ConsoleColor.Green);
       }
     }

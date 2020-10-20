@@ -1,7 +1,8 @@
-﻿using CloneAzdoDashboard.Tools.Parameters;
-using System;
+﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
+using CloneAzdoDashboard.Tools.Parameters;
 
 namespace CloneAzdoDashboard.Tools
 {
@@ -9,16 +10,49 @@ namespace CloneAzdoDashboard.Tools
   {
     public static WorkItemQuery CopyQuery(CopyQueryParameters parameters)
     {
-      WorkItemQuery targetQuery;
       var sourceQuery = TfsStatic.GetWorkItemQuery(true, parameters.QueryId, QueryExpand.minimal, 0);
 
       var targetQueryInfo = GetTargetQueryFolderId(sourceQuery, parameters.QueryReplacements);
+
+      if (TfsStatic.SourceTeamProjectBaseUri.Equals(TfsStatic.TargetTeamProjectBaseUri, StringComparison.InvariantCultureIgnoreCase) &&
+          sourceQuery.path.Equals($"{targetQueryInfo.FolderPath}/{targetQueryInfo.QueryName}", StringComparison.InvariantCultureIgnoreCase))
+      {
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.WriteLine($"Skipped: Target query path matches source query ({targetQueryInfo.FolderPath}/{targetQueryInfo.QueryName})");
+        Console.ForegroundColor = ConsoleColor.White;
+        return sourceQuery;
+      }
 
       sourceQuery.name = targetQueryInfo.QueryName;
       sourceQuery.path = targetQueryInfo.FolderPath;
       FindAndReplaceInWiql(parameters, sourceQuery);
       RemoveTeamAreaId(sourceQuery);
 
+      WorkItemQuery result;
+      int tryCount = 0;
+      while (true)
+      {
+        try
+        {
+          result = TryWriteQuery(sourceQuery, targetQueryInfo);
+          break;
+        }
+        catch
+        {
+          tryCount++;
+          if (tryCount >= 5)
+          {
+            throw;
+          }
+        }
+        Thread.Sleep(2500);
+      }
+      return result;
+    }
+
+    private static WorkItemQuery TryWriteQuery(WorkItemQuery sourceQuery, TargetQueryInfo targetQueryInfo)
+    {
+      WorkItemQuery targetQuery;
       var queryExistsAlready = false;
       try
       {
