@@ -117,7 +117,7 @@ namespace CloneAzdoDashboard.Tools
             {
               sourceQuery.wiql = sourceQuery.wiql.Remove(findIndex, item.Find.Length);
               sourceQuery.wiql = sourceQuery.wiql.Insert(findIndex, item.Replace);
-              findIndex = sourceQuery.wiql.IndexOf(item.Find, StringComparison.InvariantCultureIgnoreCase);
+              findIndex = sourceQuery.wiql.IndexOf(item.Find, findIndex + item.Replace.Length, StringComparison.InvariantCultureIgnoreCase);
             }
           }
         }
@@ -136,7 +136,7 @@ namespace CloneAzdoDashboard.Tools
         {
           targetQueryFolder.FolderPath = targetQueryFolder.FolderPath.Remove(findIndex, replacementParameters.PathFind.Length);
           targetQueryFolder.FolderPath = targetQueryFolder.FolderPath.Insert(findIndex, replacementParameters.PathReplace);
-          findIndex = targetQueryFolder.FolderPath.IndexOf(replacementParameters.PathFind, StringComparison.InvariantCultureIgnoreCase);
+          findIndex = targetQueryFolder.FolderPath.IndexOf(replacementParameters.PathFind, findIndex + replacementParameters.PathReplace.Length, StringComparison.InvariantCultureIgnoreCase);
         }
       }
       targetQueryFolder.QueryName = targetQueryFolder.FolderPath.Remove(0, targetQueryFolder.FolderPath.LastIndexOf('/') + 1);

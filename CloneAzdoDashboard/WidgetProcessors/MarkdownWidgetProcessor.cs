@@ -9,7 +9,7 @@ namespace CloneAzdoDashboard.WidgetProcessors
     public override void Run(DashboardInfo_Widget1 widget, AppConfig appConfig)
     {
       var findIndex = widget.settings.IndexOf(appConfig.SourceTeamName, StringComparison.InvariantCultureIgnoreCase);
-      if (findIndex > -1)
+      if (findIndex > -1 && !appConfig.SourceAsProject && !appConfig.TargetAsProject)
       {
         widget.settings = widget.settings.Remove(findIndex, appConfig.SourceTeamName.Length);
         widget.settings = widget.settings.Insert(findIndex, appConfig.TargetTeamName);
@@ -26,7 +26,7 @@ namespace CloneAzdoDashboard.WidgetProcessors
             {
               widget.settings = widget.settings.Remove(findIndex, item.Find.Length);
               widget.settings = widget.settings.Insert(findIndex, item.Replace);
-              findIndex = widget.settings.IndexOf(item.Find, StringComparison.InvariantCultureIgnoreCase);
+              findIndex = widget.settings.IndexOf(item.Find, findIndex + item.Replace.Length, StringComparison.InvariantCultureIgnoreCase);
             }
           }
         }

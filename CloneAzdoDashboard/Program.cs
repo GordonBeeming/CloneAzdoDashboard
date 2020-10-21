@@ -38,7 +38,7 @@ namespace CloneAzdoDashboard
         return;
       }
       var output = string.Empty;
-      var dashboards = TfsStatic.GetDashboards(true, _config.SourceTeamName, _config.SourceTeamName.Equals("Project", StringComparison.InvariantCultureIgnoreCase));
+      var dashboards = TfsStatic.GetDashboards(true, _config.SourceTeamName, _config.SourceAsProject);
       var dashboard = dashboards.value.FirstOrDefault(o => o.name.Equals(_config.SourceDashboardName));
       if (dashboard == null)
       {
@@ -49,7 +49,7 @@ namespace CloneAzdoDashboard
       WriteLine($"Target Dashboard: {_config.TargetDashboardName}");
       WriteLine($"Source Team Name: {_config.SourceTeamName}");
       WriteLine($"Target Team Name: {_config.TargetTeamName}");
-      var dashboardInfo = TfsStatic.GetDashboard(true, _config.SourceTeamName, _config.SourceTeamName.Equals("Project", StringComparison.InvariantCultureIgnoreCase), dashboard.id);
+      var dashboardInfo = TfsStatic.GetDashboard(true, _config.SourceTeamName, _config.SourceAsProject, dashboard.id);
       dashboardInfo.name = _config.TargetDashboardName;
 
       WriteLine($"Widgets: {dashboardInfo.widgets.Length}");
@@ -77,7 +77,7 @@ namespace CloneAzdoDashboard
       {
         DeleteDashboardIfExists();
         Write($"Creating dashboard '{_config.TargetDashboardName}' in the team '{_config.TargetTeamName}'...");
-        var newDashboardInfo = TfsStatic.CreateDashboard(false, _config.TargetTeamName, _config.TargetTeamName.Equals("Project", StringComparison.InvariantCultureIgnoreCase), dashboardInfo);
+        var newDashboardInfo = TfsStatic.CreateDashboard(false, _config.TargetTeamName, _config.TargetAsProject, dashboardInfo);
         var teamNameUrl = _config.TargetTeamName.Replace(" ", "%20");
         if (newDashboardInfo.url.IndexOf(teamNameUrl) > -1)
         {
@@ -95,19 +95,19 @@ namespace CloneAzdoDashboard
 
     private static void DeleteDashboardIfExists()
     {
-      var dashboards = TfsStatic.GetDashboards(false, _config.TargetTeamName, _config.TargetTeamName.Equals("Project", StringComparison.InvariantCultureIgnoreCase));
+      var dashboards = TfsStatic.GetDashboards(false, _config.TargetTeamName, _config.TargetAsProject);
       var dashboard = dashboards.value.FirstOrDefault(o => o.name.Equals(_config.TargetDashboardName));
       if (dashboard != null)
       {
         WriteLine($"Deleting dashboard: {dashboard.name} ({dashboard.id})", ConsoleColor.DarkYellow);
-        TfsStatic.DeleteDashboard(false, _config.TargetTeamName, _config.TargetTeamName.Equals("Project", StringComparison.InvariantCultureIgnoreCase), dashboard.id);
+        TfsStatic.DeleteDashboard(false, _config.TargetTeamName, _config.TargetAsProject, dashboard.id);
         return;
       }
     }
 
     private static bool TargetDashboardExists()
     {
-      var dashboards = TfsStatic.GetDashboards(false, _config.TargetTeamName, _config.TargetTeamName.Equals("Project", StringComparison.InvariantCultureIgnoreCase));
+      var dashboards = TfsStatic.GetDashboards(false, _config.TargetTeamName, _config.TargetAsProject);
       var dashboard = dashboards.value.FirstOrDefault(o => o.name.Equals(_config.TargetDashboardName));
       return dashboard != null;
     }
