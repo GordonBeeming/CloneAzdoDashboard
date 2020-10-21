@@ -109,7 +109,8 @@ namespace CloneAzdoDashboard.Tools
       {
         foreach (var item in parameters.QueryReplacements.QueryFindAndReplace)
         {
-          if (!string.IsNullOrEmpty(item.Find) && !string.IsNullOrEmpty(item.Replace))
+          if (!string.IsNullOrEmpty(item.Find) && !string.IsNullOrEmpty(item.Replace) &&
+              !item.Find.Equals(item.Replace, StringComparison.InvariantCultureIgnoreCase))
           {
             var findIndex = sourceQuery.wiql.IndexOf(item.Find, StringComparison.InvariantCultureIgnoreCase);
             while (findIndex > -1)
@@ -127,7 +128,8 @@ namespace CloneAzdoDashboard.Tools
     {
       TargetQueryInfo targetQueryFolder = new TargetQueryInfo();
       targetQueryFolder.FolderPath = sourceQuery.path;
-      if (!string.IsNullOrEmpty(replacementParameters.PathFind) && !string.IsNullOrEmpty(replacementParameters.PathReplace))
+      if (!string.IsNullOrEmpty(replacementParameters.PathFind) && !string.IsNullOrEmpty(replacementParameters.PathReplace) &&
+          !replacementParameters.PathFind.Equals(replacementParameters.PathReplace, StringComparison.InvariantCultureIgnoreCase))
       {
         var findIndex = targetQueryFolder.FolderPath.IndexOf(replacementParameters.PathFind, StringComparison.InvariantCultureIgnoreCase);
         while (findIndex > -1)

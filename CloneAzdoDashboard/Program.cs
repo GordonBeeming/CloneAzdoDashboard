@@ -9,7 +9,7 @@ namespace CloneAzdoDashboard
 {
   class Program
   {
-    static AppConfig config = null;
+    static AppConfig _config = null;
 
     static List<BaseWidgetProcessor> WidgetProcessors => new List<BaseWidgetProcessor> {
       new QueryScalarWidgetProcessor(),
@@ -32,25 +32,25 @@ namespace CloneAzdoDashboard
 
     private static void MigrateDashboard()
     {
-      if (TargetDashboardExists() && !config.DeleteTargetDashboardIfExists)
+      if (TargetDashboardExists() && !_config.DeleteTargetDashboardIfExists)
       {
-        WriteLine($"Target dashboard '{config.TargetDashboardName}' in the team '{config.TargetTeamName}' already exists and DeleteTargetDashboardIfExists=false.", ConsoleColor.Red);
+        WriteLine($"Target dashboard '{_config.TargetDashboardName}' in the team '{_config.TargetTeamName}' already exists and DeleteTargetDashboardIfExists=false.", ConsoleColor.Red);
         return;
       }
       var output = string.Empty;
-      var dashboards = TfsStatic.GetDashboards(true, config.SourceTeamName);
-      var dashboard = dashboards.value.FirstOrDefault(o => o.name.Equals(config.SourceDashboardName));
+      var dashboards = TfsStatic.GetDashboards(true, _config.SourceTeamName, _config.SourceTeamName.Equals("Project", StringComparison.InvariantCultureIgnoreCase));
+      var dashboard = dashboards.value.FirstOrDefault(o => o.name.Equals(_config.SourceDashboardName));
       if (dashboard == null)
       {
-        WriteLine($"Unable to find the dashboard '{config.SourceDashboardName}' in the team '{config.SourceTeamName}'.", ConsoleColor.Red);
+        WriteLine($"Unable to find the dashboard '{_config.SourceDashboardName}' in the team '{_config.SourceTeamName}'.", ConsoleColor.Red);
         return;
       }
       WriteLine($"Source Dashboard: {dashboard.name} ({dashboard.id})");
-      WriteLine($"Target Dashboard: {config.TargetDashboardName}");
-      WriteLine($"Source Team Name: {config.SourceTeamName}");
-      WriteLine($"Target Team Name: {config.TargetTeamName}");
-      var dashboardInfo = TfsStatic.GetDashboard(true, config.SourceTeamName, dashboard.id);
-      dashboardInfo.name = config.TargetDashboardName;
+      WriteLine($"Target Dashboard: {_config.TargetDashboardName}");
+      WriteLine($"Source Team Name: {_config.SourceTeamName}");
+      WriteLine($"Target Team Name: {_config.TargetTeamName}");
+      var dashboardInfo = TfsStatic.GetDashboard(true, _config.SourceTeamName, _config.SourceTeamName.Equals("Project", StringComparison.InvariantCultureIgnoreCase), dashboard.id);
+      dashboardInfo.name = _config.TargetDashboardName;
 
       WriteLine($"Widgets: {dashboardInfo.widgets.Length}");
       foreach (var widget in dashboardInfo.widgets)
@@ -61,7 +61,7 @@ namespace CloneAzdoDashboard
           if (widget.contributionId.Equals(processor.ContributionId, StringComparison.InvariantCultureIgnoreCase))
           {
             WriteLine($"\tprocessing");
-            processor.Run(widget, config);
+            processor.Run(widget, _config);
             continue;
           }
         }
@@ -69,16 +69,16 @@ namespace CloneAzdoDashboard
 
       WriteLine();
       WriteLine();
-      if (config.UpdateQueriesOnly)
+      if (_config.UpdateQueriesOnly)
       {
         WriteLine($"Skipping dashboard creation, UpdateQueriesOnly=true.");
       }
       else
       {
         DeleteDashboardIfExists();
-        Write($"Creating dashboard '{config.TargetDashboardName}' in the team '{config.TargetTeamName}'...");
-        var newDashboardInfo = TfsStatic.CreateDashboard(false, config.TargetTeamName, dashboardInfo);
-        var teamNameUrl = config.TargetTeamName.Replace(" ", "%20");
+        Write($"Creating dashboard '{_config.TargetDashboardName}' in the team '{_config.TargetTeamName}'...");
+        var newDashboardInfo = TfsStatic.CreateDashboard(false, _config.TargetTeamName, _config.TargetTeamName.Equals("Project", StringComparison.InvariantCultureIgnoreCase), dashboardInfo);
+        var teamNameUrl = _config.TargetTeamName.Replace(" ", "%20");
         if (newDashboardInfo.url.IndexOf(teamNameUrl) > -1)
         {
           var url = newDashboardInfo.url.Remove(newDashboardInfo.url.IndexOf(teamNameUrl), teamNameUrl.Length + 1);
@@ -95,20 +95,20 @@ namespace CloneAzdoDashboard
 
     private static void DeleteDashboardIfExists()
     {
-      var dashboards = TfsStatic.GetDashboards(false, config.TargetTeamName);
-      var dashboard = dashboards.value.FirstOrDefault(o => o.name.Equals(config.TargetDashboardName));
+      var dashboards = TfsStatic.GetDashboards(false, _config.TargetTeamName, _config.TargetTeamName.Equals("Project", StringComparison.InvariantCultureIgnoreCase));
+      var dashboard = dashboards.value.FirstOrDefault(o => o.name.Equals(_config.TargetDashboardName));
       if (dashboard != null)
       {
         WriteLine($"Deleting dashboard: {dashboard.name} ({dashboard.id})", ConsoleColor.DarkYellow);
-        TfsStatic.DeleteDashboard(false, config.TargetTeamName, dashboard.id);
+        TfsStatic.DeleteDashboard(false, _config.TargetTeamName, _config.TargetTeamName.Equals("Project", StringComparison.InvariantCultureIgnoreCase), dashboard.id);
         return;
       }
     }
 
     private static bool TargetDashboardExists()
     {
-      var dashboards = TfsStatic.GetDashboards(false, config.TargetTeamName);
-      var dashboard = dashboards.value.FirstOrDefault(o => o.name.Equals(config.TargetDashboardName));
+      var dashboards = TfsStatic.GetDashboards(false, _config.TargetTeamName, _config.TargetTeamName.Equals("Project", StringComparison.InvariantCultureIgnoreCase));
+      var dashboard = dashboards.value.FirstOrDefault(o => o.name.Equals(_config.TargetDashboardName));
       return dashboard != null;
     }
 
@@ -143,12 +143,12 @@ namespace CloneAzdoDashboard
         WriteLine($"{fileName} is missing!", ConsoleColor.Red);
         return false;
       }
-      config = JsonConvert.DeserializeObject<AppConfig>(File.ReadAllText($".\\{fileName}"));
+      _config = JsonConvert.DeserializeObject<AppConfig>(File.ReadAllText($".\\{fileName}"));
 
-      TfsStatic.SourceTeamProjectBaseUri = config.SourceTeamProjectBaseUri;
-      TfsStatic.TargetTeamProjectBaseUri = config.TargetTeamProjectBaseUri;
-      TfsStatic.SourcePatKey = config.SourcePatKey;
-      TfsStatic.TargetPatKey = config.TargetPatKey;
+      TfsStatic.SourceTeamProjectBaseUri = _config.SourceTeamProjectBaseUri;
+      TfsStatic.TargetTeamProjectBaseUri = _config.TargetTeamProjectBaseUri;
+      TfsStatic.SourcePatKey = _config.SourcePatKey;
+      TfsStatic.TargetPatKey = _config.TargetPatKey;
 
       if (!GetPatToken())
       {

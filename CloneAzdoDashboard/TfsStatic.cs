@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace CloneAzdoDashboard
 {
@@ -189,24 +189,28 @@ namespace CloneAzdoDashboard
 
     #region Dashboards
 
-    public static DashboardsList GetDashboards(bool source, string teamName)
+    public static DashboardsList GetDashboards(bool source, string teamName, bool projectDashboard)
     {
-      return Get<DashboardsList>(GetUrl(source, false, $"/{teamName}/_apis/dashboard/dashboards?api-version=6.0-preview.3"), GetAuthorizationHeader(source));
+      var teamPart = projectDashboard ? string.Empty : $"/{teamName}";
+      return Get<DashboardsList>(GetUrl(source, false, $"{teamPart}/_apis/dashboard/dashboards?api-version=6.0-preview.3"), GetAuthorizationHeader(source));
     }
 
-    public static DashboardInfo GetDashboard(bool source, string teamName, string dashboardId)
+    public static DashboardInfo GetDashboard(bool source, string teamName, bool projectDashboard, string dashboardId)
     {
-      return Get<DashboardInfo>(GetUrl(source, false, $"/{teamName}/_apis/dashboard/dashboards/{dashboardId}?api-version=6.0-preview.3"), GetAuthorizationHeader(source));
+      var teamPart = projectDashboard ? string.Empty : $"/{teamName}";
+      return Get<DashboardInfo>(GetUrl(source, false, $"{teamPart}/_apis/dashboard/dashboards/{dashboardId}?api-version=6.0-preview.3"), GetAuthorizationHeader(source));
     }
 
-    public static DashboardInfo CreateDashboard(bool source, string teamName, DashboardInfo dashboardData)
+    public static DashboardInfo CreateDashboard(bool source, string teamName, bool projectDashboard, DashboardInfo dashboardData)
     {
-      return Post<DashboardInfo>(GetUrl(source, false, $"/{teamName}/_apis/dashboard/dashboards?api-version=6.0-preview.3"), dashboardData, GetAuthorizationHeader(source));
+      var teamPart = projectDashboard ? string.Empty : $"/{teamName}";
+      return Post<DashboardInfo>(GetUrl(source, false, $"{teamPart}/_apis/dashboard/dashboards?api-version=6.0-preview.3"), dashboardData, GetAuthorizationHeader(source));
     }
 
-    public static void DeleteDashboard(bool source, string teamName, string dashboardId)
+    public static void DeleteDashboard(bool source, string teamName, bool projectDashboard, string dashboardId)
     {
-      Delete(GetUrl(source, false, $"/{teamName}/_apis/dashboard/dashboards/{dashboardId}?api-version=6.0-preview.3"), null, GetAuthorizationHeader(source));
+      var teamPart = projectDashboard ? string.Empty : $"/{teamName}";
+      Delete(GetUrl(source, false, $"{teamPart}/_apis/dashboard/dashboards/{dashboardId}?api-version=6.0-preview.3"), null, GetAuthorizationHeader(source));
     }
 
     #endregion
