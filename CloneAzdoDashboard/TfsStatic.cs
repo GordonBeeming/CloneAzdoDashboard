@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Net;
 using System.Text;
-using Newtonsoft.Json;
 
 namespace CloneAzdoDashboard
 {
@@ -248,6 +248,15 @@ namespace CloneAzdoDashboard
     //{
     //  Delete(GetUrl(source, false, $"/{teamName}/_apis/dashboard/dashboards/{dashboardId}?api-version=6.0-preview.3"), null, GetAuthorizationHeader(source));
     //}
+
+    #endregion
+
+    #region Builds
+
+    public static BuildList GetBuilds(bool source)
+    {
+      return Get<BuildList>(GetUrl(source, false, $"/_apis/build/builds?api-version=6.0"), GetAuthorizationHeader(source));
+    }
 
     #endregion
 

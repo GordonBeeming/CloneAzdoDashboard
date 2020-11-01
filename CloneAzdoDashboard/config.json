@@ -5,12 +5,12 @@
   "TargetPatKey": "",
 
   "SourceTeamName": "Default Team",
-  "SourceDashboardName": "Overview",
+  "SourceDashboardName": "Focus",
 
   "TargetTeamName": "Project Awesome Team",
-  "TargetDashboardName": "Overview 43",
+  "TargetDashboardName": "Focus",
 
-  "UpdateQueriesOnly": true,
+  "UpdateQueriesOnly": false,
 
   "DeleteTargetDashboardIfExists": true,
 
@@ -24,6 +24,12 @@
         "Replace": "[System.WorkItemType] = 'Epic'"
       }
     ]
+  },
+
+  "Builds": {
+    "Mapping": {
+      "SampleApp (1)": "SampleApp"
+    }
   },
 
   "MarkdownFindAndReplace": [

@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using CloneAzdoDashboard.Config;
 using CloneAzdoDashboard.Tools.Parameters;
+using System.Collections.Generic;
 
 namespace CloneAzdoDashboard
 {
@@ -16,12 +17,13 @@ namespace CloneAzdoDashboard
     public string TargetDashboardName { get; set; }
     public bool TargetAsProject { get; set; }
     public bool DeleteTargetDashboardIfExists { get; set; }
-    //public bool UseSourceWhenAvailable { get; set; }
     public bool UpdateQueriesOnly { get; set; }
 
     public QueryReplacementParameters Queries { get; set; }
 
     public List<FindAndReplace> MarkdownFindAndReplace { get; set; } = new List<FindAndReplace>();
+
+    public BuildsConfig Builds { get; set; } = new BuildsConfig();
   }
 
 }

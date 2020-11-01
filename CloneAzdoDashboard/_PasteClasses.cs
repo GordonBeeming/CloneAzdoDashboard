@@ -21,6 +21,173 @@ namespace CloneAzdoDashboard
 
 
 
+  public class BuildList
+  {
+    public int count { get; set; }
+    public BuildList_Value[] value { get; set; }
+  }
+
+  public class BuildList_Value
+  {
+    public BuildList_Properties properties { get; set; }
+    public object[] tags { get; set; }
+    public object[] validationResults { get; set; }
+    public BuildList_Plan[] plans { get; set; }
+    public BuildList_Triggerinfo triggerInfo { get; set; }
+    public int id { get; set; }
+    public string buildNumber { get; set; }
+    public string status { get; set; }
+    public string result { get; set; }
+    public DateTime queueTime { get; set; }
+    public DateTime startTime { get; set; }
+    public DateTime finishTime { get; set; }
+    public string url { get; set; }
+    public BuildList_Definition definition { get; set; }
+    public int buildNumberRevision { get; set; }
+    public BuildList_Project project { get; set; }
+    public string uri { get; set; }
+    public string sourceBranch { get; set; }
+    public string sourceVersion { get; set; }
+    public BuildList_Queue queue { get; set; }
+    public string priority { get; set; }
+    public string reason { get; set; }
+    public BuildList_Requestedfor requestedFor { get; set; }
+    public BuildList_Requestedby requestedBy { get; set; }
+    public DateTime lastChangedDate { get; set; }
+    public BuildList_Lastchangedby lastChangedBy { get; set; }
+    public BuildList_Orchestrationplan orchestrationPlan { get; set; }
+    public BuildList_Logs logs { get; set; }
+    public BuildList_Repository repository { get; set; }
+    public bool keepForever { get; set; }
+    public bool retainedByRelease { get; set; }
+    public object triggeredByBuild { get; set; }
+  }
+
+  public class BuildList_Properties
+  {
+  }
+
+  public class BuildList_Triggerinfo
+  {
+    public string cisourceSha { get; set; }
+    public string cisourceBranch { get; set; }
+  }
+
+  public class BuildList_Definition
+  {
+    public object[] drafts { get; set; }
+    public int id { get; set; }
+    public string name { get; set; }
+    public string url { get; set; }
+    public string uri { get; set; }
+    public string path { get; set; }
+    public string type { get; set; }
+    public string queueStatus { get; set; }
+    public int revision { get; set; }
+    public BuildList_Project project { get; set; }
+  }
+
+  public class BuildList_Project
+  {
+    public string id { get; set; }
+    public string name { get; set; }
+    public string url { get; set; }
+    public string state { get; set; }
+    public int revision { get; set; }
+    public string visibility { get; set; }
+    public DateTime lastUpdateTime { get; set; }
+  }
+
+  public class BuildList_Queue
+  {
+    public int id { get; set; }
+    public string name { get; set; }
+    public BuildList_Pool pool { get; set; }
+  }
+
+  public class BuildList_Pool
+  {
+    public int id { get; set; }
+    public string name { get; set; }
+    public bool isHosted { get; set; }
+  }
+
+  public class BuildList_Requestedfor
+  {
+    public string displayName { get; set; }
+    public string url { get; set; }
+    public string id { get; set; }
+    public string uniqueName { get; set; }
+    public string imageUrl { get; set; }
+    public string descriptor { get; set; }
+  }
+
+  public class BuildList_Requestedby
+  {
+    public string displayName { get; set; }
+    public string url { get; set; }
+    public string id { get; set; }
+    public string uniqueName { get; set; }
+    public string imageUrl { get; set; }
+    public string descriptor { get; set; }
+  }
+
+  public class BuildList_Lastchangedby
+  {
+    public string displayName { get; set; }
+    public string url { get; set; }
+    public string id { get; set; }
+    public string uniqueName { get; set; }
+    public string imageUrl { get; set; }
+    public string descriptor { get; set; }
+  }
+
+  public class BuildList_Orchestrationplan
+  {
+    public string planId { get; set; }
+  }
+
+  public class BuildList_Logs
+  {
+    public int id { get; set; }
+    public string type { get; set; }
+    public string url { get; set; }
+  }
+
+  public class BuildList_Repository
+  {
+    public string id { get; set; }
+    public string type { get; set; }
+    public string name { get; set; }
+    public string url { get; set; }
+    public object clean { get; set; }
+    public bool checkoutSubmodules { get; set; }
+  }
+
+  public class BuildList_Plan
+  {
+    public string planId { get; set; }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   public enum QueryExpand
   {
     /// <summary>
@@ -146,7 +313,6 @@ namespace CloneAzdoDashboard
     public bool isFolder { get; set; }
     public bool hasChildren { get; set; }
     public bool isPublic { get; set; }
-    public WorkItemQueries_Links1 _links { get; set; }
     public string url { get; set; }
     public WorkItemQueries_Createdby createdBy { get; set; }
   }
@@ -157,36 +323,9 @@ namespace CloneAzdoDashboard
     public string name { get; set; }
     public string displayName { get; set; }
     public string url { get; set; }
-    public WorkItemQueries_Links _links { get; set; }
     public string uniqueName { get; set; }
     public string imageUrl { get; set; }
     public string descriptor { get; set; }
-  }
-
-  public class WorkItemQueries_Links
-  {
-    public WorkItemQueries_Avatar avatar { get; set; }
-  }
-
-  public class WorkItemQueries_Avatar
-  {
-    public string href { get; set; }
-  }
-
-  public class WorkItemQueries_Links1
-  {
-    public WorkItemQueries_Self self { get; set; }
-    public WorkItemQueries_Html html { get; set; }
-  }
-
-  public class WorkItemQueries_Self
-  {
-    public string href { get; set; }
-  }
-
-  public class WorkItemQueries_Html
-  {
-    public string href { get; set; }
   }
 
   public class WorkItemQueries_Createdby
@@ -195,20 +334,9 @@ namespace CloneAzdoDashboard
     public string name { get; set; }
     public string displayName { get; set; }
     public string url { get; set; }
-    public WorkItemQueries_Links2 _links { get; set; }
     public string uniqueName { get; set; }
     public string imageUrl { get; set; }
     public string descriptor { get; set; }
-  }
-
-  public class WorkItemQueries_Links2
-  {
-    public WorkItemQueries_Avatar1 avatar { get; set; }
-  }
-
-  public class WorkItemQueries_Avatar1
-  {
-    public string href { get; set; }
   }
 
 
@@ -229,29 +357,6 @@ namespace CloneAzdoDashboard
     public string ownerId { get; set; }
     public string dashboardScope { get; set; }
     public string url { get; set; }
-    public DashboardInfo_Links _links { get; set; }
-  }
-
-  public class DashboardInfo_Links
-  {
-    public DashboardInfo_Self self { get; set; }
-    public DashboardInfo_Group group { get; set; }
-    public DashboardInfo_Widget[] widget { get; set; }
-  }
-
-  public class DashboardInfo_Self
-  {
-    public string href { get; set; }
-  }
-
-  public class DashboardInfo_Group
-  {
-    public string href { get; set; }
-  }
-
-  public class DashboardInfo_Widget
-  {
-    public string href { get; set; }
   }
 
   public class DashboardInfo_Widget1
@@ -265,7 +370,6 @@ namespace CloneAzdoDashboard
     public DashboardInfo_SettingsVersion settingsVersion { get; set; }
     public string artifactId { get; set; }
     public string url { get; set; }
-    public DashboardInfo_Links1 _links { get; set; }
     public bool isEnabled { get; set; }
     public object contentUri { get; set; }
     public string contributionId { get; set; }
@@ -294,28 +398,6 @@ namespace CloneAzdoDashboard
     public int major { get; set; }
     public int minor { get; set; }
     public int patch { get; set; }
-  }
-
-  public class DashboardInfo_Links1
-  {
-    public DashboardInfo_Self1 self { get; set; }
-    public DashboardInfo_Group1 group { get; set; }
-    public DashboardInfo_Dashboard dashboard { get; set; }
-  }
-
-  public class DashboardInfo_Self1
-  {
-    public string href { get; set; }
-  }
-
-  public class DashboardInfo_Group1
-  {
-    public string href { get; set; }
-  }
-
-  public class DashboardInfo_Dashboard
-  {
-    public string href { get; set; }
   }
 
   public class DashboardInfo_Lightboxoptions
@@ -347,23 +429,6 @@ namespace CloneAzdoDashboard
     public string ownerId { get; set; }
     public string dashboardScope { get; set; }
     public string url { get; set; }
-    public DashboardsList_Value_Links _links { get; set; }
-  }
-
-  public class DashboardsList_Value_Links
-  {
-    public DashboardsList_Self self { get; set; }
-    public DashboardsList_Group group { get; set; }
-  }
-
-  public class DashboardsList_Self
-  {
-    public string href { get; set; }
-  }
-
-  public class DashboardsList_Group
-  {
-    public string href { get; set; }
   }
 
 

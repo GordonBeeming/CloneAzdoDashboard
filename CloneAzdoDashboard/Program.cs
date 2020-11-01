@@ -1,9 +1,9 @@
-﻿using System;
+﻿using CloneAzdoDashboard.WidgetProcessors;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CloneAzdoDashboard.WidgetProcessors;
-using Newtonsoft.Json;
 
 namespace CloneAzdoDashboard
 {
@@ -16,6 +16,7 @@ namespace CloneAzdoDashboard
       new WitViewWidgetProcessor(),
       new WitChartWidgetProcessor(),
       new MarkdownWidgetProcessor(),
+      new BuildHistogramWidgetProcessor(),
     };
 
     static void Main(string[] args)
