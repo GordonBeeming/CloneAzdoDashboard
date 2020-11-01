@@ -29,9 +29,7 @@ namespace CloneAzdoDashboard.WidgetProcessors
 
       if (targetBuild == null)
       {
-        Console.ForegroundColor = ConsoleColor.DarkYellow;
-        Console.WriteLine($"Skipped: Build named '{targetBuildName}' does not exist in target project");
-        Console.ForegroundColor = ConsoleColor.White;
+        WriteWarning($"Skipped: Build named '{targetBuildName}' does not exist in target project");
         return;
       }
       if (widget.name.Equals(settings.buildDefinition.name, StringComparison.InvariantCultureIgnoreCase))

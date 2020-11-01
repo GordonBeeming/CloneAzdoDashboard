@@ -260,6 +260,15 @@ namespace CloneAzdoDashboard
 
     #endregion
 
+    #region Teams
+
+    public static TeamList GetTeams(bool source, string projectName)
+    {
+      return Get<TeamList>(GetUrl(source, true, $"/_apis/projects/{projectName}/teams?api-version=6.0"), GetAuthorizationHeader(source));
+    }
+
+    #endregion
+
     public static string GetUrl(bool source, bool excludeProject, string uriRelativeToRoot)
     {
       var baseUri = source ? SourceTeamProjectBaseUri : TargetTeamProjectBaseUri;
@@ -272,8 +281,7 @@ namespace CloneAzdoDashboard
 
     public static string GetTeamProjectId(bool source)
     {
-      var baseUri = source ? SourceTeamProjectBaseUri : TargetTeamProjectBaseUri;
-      var teamProjectName = baseUri.Remove(0, baseUri.LastIndexOf('/') + 1);
+      var teamProjectName = GetTeamProjectName(source);
       var projects = Get<GetProjects>(GetUrl(source, true, $"/_apis/projects?api-version=2.0"), GetAuthorizationHeader(source));
       foreach (var item in projects.value)
       {
@@ -283,6 +291,13 @@ namespace CloneAzdoDashboard
         }
       }
       return null;
+    }
+
+    public static string GetTeamProjectName(bool source)
+    {
+      var baseUri = source ? SourceTeamProjectBaseUri : TargetTeamProjectBaseUri;
+      var teamProjectName = baseUri.Remove(0, baseUri.LastIndexOf('/') + 1);
+      return teamProjectName;
     }
   }
 }

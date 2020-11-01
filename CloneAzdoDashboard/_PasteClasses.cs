@@ -21,6 +21,44 @@ namespace CloneAzdoDashboard
 
 
 
+
+
+  public class TeamList
+  {
+    public TeamList_Value[] value { get; set; }
+    public int count { get; set; }
+  }
+
+  public class TeamList_Value
+  {
+    public string id { get; set; }
+    public string name { get; set; }
+    public string url { get; set; }
+    public string description { get; set; }
+    public string identityUrl { get; set; }
+    public string projectName { get; set; }
+    public string projectId { get; set; }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   public class BuildList
   {
     public int count { get; set; }
