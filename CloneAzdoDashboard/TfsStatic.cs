@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace CloneAzdoDashboard
 {
@@ -110,7 +110,11 @@ namespace CloneAzdoDashboard
           var responseString = sr.ReadToEnd();
           var exception = JsonConvert.DeserializeObject<RestCallException>(responseString);
           //throw new Exception($"{exception.message} | {uri}");
-          throw new Exception(exception?.message ?? webEx.Message);
+          if (exception != null)
+          {
+            throw exception;
+          }
+          throw webEx;
         }
       }
     }

@@ -4,15 +4,17 @@
   "SourcePatKey": "",
   "TargetPatKey": "",
 
+  "Mode": "Queries", // Queries or Dashboard
+
   "SourceTeamName": "Default Team",
-  "SourceDashboardName": "Focus",
+  // "SourceDashboardName": "Focus",
 
   "TargetTeamName": "Project Awesome Team",
-  "TargetDashboardName": "Focus",
+  // "TargetDashboardName": "Focus",
 
   "UpdateQueriesOnly": false,
 
-  "DeleteTargetDashboardIfExists": true,
+  // "DeleteTargetDashboardIfExists": true,
 
   "Queries": {
     "PathFind": "My Folder",
@@ -24,18 +26,18 @@
         "Replace": "[System.WorkItemType] = 'Epic'"
       }
     ]
-  },
+  }
 
-  "Builds": {
-    "Mapping": {
-      "SampleApp (1)": "SampleApp"
-    }
-  },
+  // "Builds": {
+  //   "Mapping": {
+  //     "SampleApp (1)": "SampleApp"
+  //   }
+  // },
 
-  "MarkdownFindAndReplace": [
-    {
-      "Find": null,
-      "Replace": null
-    }
-  ]
+  // "MarkdownFindAndReplace": [
+  //   {
+  //     "Find": null,
+  //     "Replace": null
+  //   }
+  // ]
 }

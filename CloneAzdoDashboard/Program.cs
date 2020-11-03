@@ -1,9 +1,10 @@
-﻿using CloneAzdoDashboard.WidgetProcessors;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CloneAzdoDashboard.Tools;
+using CloneAzdoDashboard.WidgetProcessors;
+using Newtonsoft.Json;
 
 namespace CloneAzdoDashboard
 {
@@ -27,13 +28,36 @@ namespace CloneAzdoDashboard
         return;
       }
 
-      MigrateDashboard();
+      if (_config.Mode == Config.MigrationModes.Dashboard)
+      {
+        MigrateDashboard();
+      }
+      else if (_config.Mode == Config.MigrationModes.Queries)
+      {
+        MigrateQueries();
+      }
+      else
+      {
+        WriteLine("Mode not set!", ConsoleColor.DarkYellow);
+      }
 
       DoneDone();
     }
 
+    #region Migrate Dashboard
+
     private static void MigrateDashboard()
     {
+      if (!string.IsNullOrEmpty(_config.SourceDashboardName))
+      {
+        WriteLine($"{nameof(AppConfig.SourceDashboardName)} is missing for Dashboard Migration!", ConsoleColor.Red);
+        return;
+      }
+      if (!string.IsNullOrEmpty(_config.TargetDashboardName))
+      {
+        WriteLine($"{nameof(AppConfig.TargetDashboardName)} is missing for Dashboard Migration!", ConsoleColor.Red);
+        return;
+      }
       if (TargetDashboardExists() && !_config.DeleteTargetDashboardIfExists)
       {
         WriteLine($"Target dashboard '{_config.TargetDashboardName}' in the team '{_config.TargetTeamName}' already exists and DeleteTargetDashboardIfExists=false.", ConsoleColor.Red);
@@ -129,6 +153,57 @@ namespace CloneAzdoDashboard
       }
       return display;
     }
+
+    #endregion
+
+    #region Migrate Queries
+
+    private static void MigrateQueries()
+    {
+      if (string.IsNullOrEmpty(_config.Queries.PathFind))
+      {
+        WriteLine($"{nameof(AppConfig.Queries)}.{nameof(AppConfig.Queries.PathFind)} is missing for Query Migration!", ConsoleColor.Red);
+        return;
+      }
+      if (string.IsNullOrEmpty(_config.Queries.PathReplace))
+      {
+        WriteLine($"{nameof(AppConfig.Queries)}.{nameof(AppConfig.Queries.PathReplace)} is missing for Query Migration!", ConsoleColor.Red);
+        return;
+      }
+
+      var baseQueryFolder = TfsStatic.GetWorkItemQuery(true, _config.Queries.PathFind, QueryExpand.minimal, 1);
+      if (!baseQueryFolder.isFolder)
+      {
+        WriteLine($"{_config.Queries.PathFind} does not refer to a query folder!", ConsoleColor.Red);
+        return;
+      }
+      CopyQueryFolder(baseQueryFolder);
+    }
+
+    private static void CopyQueryFolder(WorkItemQuery queryFolder)
+    {
+      WriteLine($"{queryFolder.path}");
+      if (!queryFolder.isFolder || queryFolder.children.Length == 0)
+      {
+        return;
+      }
+      foreach (var childQueryFolder in queryFolder.children.Where(o => o.isFolder))
+      {
+        var childQueryFolderObject = TfsStatic.GetWorkItemQuery(true, childQueryFolder.id, QueryExpand.minimal, 1);
+        CopyQueryFolder(childQueryFolderObject);
+      }
+      foreach (var query in queryFolder.children.Where(o => !o.isFolder))
+      {
+        WriteLine($"\t- {query.name}");
+        QueryTools.CopyQuery(new Tools.Parameters.CopyQueryParameters
+        {
+          QueryId = query.id,
+          QueryReplacements = _config.Queries,
+        });
+      }
+    }
+
+    #endregion
 
     #region fluff
 
