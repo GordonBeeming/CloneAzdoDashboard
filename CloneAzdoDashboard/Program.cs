@@ -24,6 +24,8 @@ namespace CloneAzdoDashboard
       new NewWorkItemWidgetProcessor(),
       new OtherLinksWidgetProcessor(),
       new WorkLinksWidgetProcessor(),
+      new HowToLinksWidgetProcessor(),
+      new IFrameWidgetProcessor(),
     };
 
     static void Main(string[] args)
