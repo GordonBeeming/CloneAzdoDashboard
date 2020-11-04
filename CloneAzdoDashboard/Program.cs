@@ -48,12 +48,12 @@ namespace CloneAzdoDashboard
 
     private static void MigrateDashboard()
     {
-      if (!string.IsNullOrEmpty(_config.SourceDashboardName))
+      if (string.IsNullOrEmpty(_config.SourceDashboardName))
       {
         WriteLine($"{nameof(AppConfig.SourceDashboardName)} is missing for Dashboard Migration!", ConsoleColor.Red);
         return;
       }
-      if (!string.IsNullOrEmpty(_config.TargetDashboardName))
+      if (string.IsNullOrEmpty(_config.TargetDashboardName))
       {
         WriteLine($"{nameof(AppConfig.TargetDashboardName)} is missing for Dashboard Migration!", ConsoleColor.Red);
         return;
