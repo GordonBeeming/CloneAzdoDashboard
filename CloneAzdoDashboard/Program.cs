@@ -21,6 +21,9 @@ namespace CloneAzdoDashboard
       new TeamMembersWidgetProcessor(),
       new CodeScalarWidgetProcessor(),
       new AssignedToMeWidgetProcessor(),
+      new NewWorkItemWidgetProcessor(),
+      new OtherLinksWidgetProcessor(),
+      new WorkLinksWidgetProcessor(),
     };
 
     static void Main(string[] args)
