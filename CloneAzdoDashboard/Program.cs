@@ -19,6 +19,7 @@ namespace CloneAzdoDashboard
       new MarkdownWidgetProcessor(),
       new BuildHistogramWidgetProcessor(),
       new TeamMembersWidgetProcessor(),
+      new CodeScalarWidgetProcessor(),
     };
 
     static void Main(string[] args)
