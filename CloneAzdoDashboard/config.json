@@ -13,8 +13,8 @@
   "TargetDashboardName": "Focus",
 
   "UpdateQueriesOnly": false,
-
   "DeleteTargetDashboardIfExists": true,
+  "NullSettingsWhereNoSupportedProcessorExists": true,
 
   "Queries": {
     "PathFind": "My Folder",

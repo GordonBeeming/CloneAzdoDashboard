@@ -97,6 +97,10 @@ namespace CloneAzdoDashboard
         }
         if (!processorFound)
         {
+          if (_config.NullSettingsWhereNoSupportedProcessorExists)
+          {
+            widget.settings = null;
+          }
           WriteLine($"No processor for '{widget.contributionId}' found.", ConsoleColor.DarkYellow);
         }
       }

@@ -23,6 +23,7 @@ namespace CloneAzdoDashboard
 
     public bool UpdateQueriesOnly { get; set; }
     public bool DeleteTargetDashboardIfExists { get; set; }
+    public bool NullSettingsWhereNoSupportedProcessorExists { get; set; } = true;
 
     public QueryReplacementParameters Queries { get; set; } = new QueryReplacementParameters();
 
