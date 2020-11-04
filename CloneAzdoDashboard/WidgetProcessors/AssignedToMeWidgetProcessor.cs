@@ -6,7 +6,7 @@
 
     public override void Run(DashboardInfo_Widget1 widget, AppConfig appConfig)
     {
-      // nothing is required for an Assigned to me Widget
+      // nothing is required
     }
   }
 }

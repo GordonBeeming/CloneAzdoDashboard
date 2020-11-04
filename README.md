@@ -16,6 +16,7 @@ Currently the tool has explicit processors for the following widgets.
 | ms.vss-dashboards-web.Microsoft.VisualStudioOnline.Dashboards.TeamMembersWidget |
 | ms.vss-dashboards-web.Microsoft.VisualStudioOnline.Dashboards.CodeScalarWidget |
 | ms.vss-dashboards-web.Microsoft.VisualStudioOnline.Dashboards.AssignedToMeWidget |
+| ms.vss-dashboards-web.Microsoft.VisualStudioOnline.Dashboards.NewWorkItemWidget |
 
 If no processor is found for a widget the tool will just apply the source widgets 
 against the target dashboard. Some widgets like the AssignedToMeWidget doesn't have 
