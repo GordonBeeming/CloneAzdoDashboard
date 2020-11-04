@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using CloneAzdoDashboard.WidgetProcessors.WidgetySettings;
 using Newtonsoft.Json;
 
@@ -30,6 +31,11 @@ namespace CloneAzdoDashboard.WidgetProcessors
       {
         WriteWarning($"Skipped: Can't find a repository in the source project with an id of '{settings.repositoryId}'.");
         return;
+      }
+      var targetRepoName = sourceRepoName;
+      if (appConfig.Repos.Mapping.Keys.Any(o => o.Equals(targetRepoName, StringComparison.InvariantCultureIgnoreCase)))
+      {
+        targetRepoName = appConfig.Builds.Mapping[appConfig.Repos.Mapping.Keys.First(o => o.Equals(targetRepoName, StringComparison.InvariantCultureIgnoreCase))];
       }
       var targetRepoId = _targetRepositoryList.value.FirstOrDefault(o => o.name == sourceRepoName)?.id;
       if (string.IsNullOrEmpty(targetRepoId))

@@ -29,6 +29,8 @@ namespace CloneAzdoDashboard
     public List<FindAndReplace> MarkdownFindAndReplace { get; set; } = new List<FindAndReplace>();
 
     public BuildsConfig Builds { get; set; } = new BuildsConfig();
+
+    public ReposConfig Repos { get; set; } = new ReposConfig();
   }
 
 }
