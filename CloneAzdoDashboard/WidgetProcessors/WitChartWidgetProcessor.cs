@@ -11,6 +11,11 @@ namespace CloneAzdoDashboard.WidgetProcessors
 
     public override void Run(DashboardInfo_Widget1 widget, AppConfig appConfig)
     {
+      if (widget.settings == null)
+      {
+        WriteWarning("Skipped: settings == null");
+        return;
+      }
       WorkItemQuery targetQuery;
       var settings = JsonConvert.DeserializeObject<WitChartWidgetSettings>(widget.settings);
       targetQuery = QueryTools.CopyQuery(new CopyQueryParameters

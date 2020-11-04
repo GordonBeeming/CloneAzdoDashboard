@@ -14,6 +14,11 @@ namespace CloneAzdoDashboard.WidgetProcessors
 
     public override void Run(DashboardInfo_Widget1 widget, AppConfig appConfig)
     {
+      if (widget.settings == null)
+      {
+        WriteWarning("Skipped: settings == null");
+        return;
+      }
       var settings = JsonConvert.DeserializeObject<CodeScalarWidgetSettings>(widget.settings);
 
       if (_sourceRepositoryList == null)

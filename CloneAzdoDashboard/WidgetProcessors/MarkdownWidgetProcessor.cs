@@ -8,6 +8,11 @@ namespace CloneAzdoDashboard.WidgetProcessors
 
     public override void Run(DashboardInfo_Widget1 widget, AppConfig appConfig)
     {
+      if (widget.settings == null)
+      {
+        WriteWarning("Skipped: settings == null");
+        return;
+      }
       var findIndex = widget.settings.IndexOf(appConfig.SourceTeamName, StringComparison.InvariantCultureIgnoreCase);
       if (findIndex > -1 && !appConfig.SourceAsProject && !appConfig.TargetAsProject)
       {

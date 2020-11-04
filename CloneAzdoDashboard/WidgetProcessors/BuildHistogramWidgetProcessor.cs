@@ -1,7 +1,7 @@
-﻿using CloneAzdoDashboard.WidgetProcessors.WidgetySettings;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Linq;
+using CloneAzdoDashboard.WidgetProcessors.WidgetySettings;
+using Newtonsoft.Json;
 
 namespace CloneAzdoDashboard.WidgetProcessors
 {
@@ -9,15 +9,20 @@ namespace CloneAzdoDashboard.WidgetProcessors
   {
     public override string ContributionId => "ms.vss-dashboards-web.Microsoft.VisualStudioOnline.Dashboards.BuildHistogramWidget";
 
-    private static BuildList targetBuildList = null;
+    private static BuildList _targetBuildList = null;
 
     public override void Run(DashboardInfo_Widget1 widget, AppConfig appConfig)
     {
+      if (widget.settings == null)
+      {
+        WriteWarning("Skipped: settings == null");
+        return;
+      }
       var settings = JsonConvert.DeserializeObject<BuildHistogramWidgetSettings>(widget.settings);
 
-      if (targetBuildList == null)
+      if (_targetBuildList == null)
       {
-        targetBuildList = TfsStatic.GetBuilds(false);
+        _targetBuildList = TfsStatic.GetBuilds(false);
       }
 
       var targetBuildName = settings.buildDefinition.name;
@@ -25,7 +30,7 @@ namespace CloneAzdoDashboard.WidgetProcessors
       {
         targetBuildName = appConfig.Builds.Mapping[appConfig.Builds.Mapping.Keys.First(o => o.Equals(targetBuildName, StringComparison.InvariantCultureIgnoreCase))];
       }
-      var targetBuild = targetBuildList.value.FirstOrDefault(o => o.definition.name.Equals(targetBuildName, StringComparison.InvariantCultureIgnoreCase));
+      var targetBuild = _targetBuildList.value.FirstOrDefault(o => o.definition.name.Equals(targetBuildName, StringComparison.InvariantCultureIgnoreCase));
 
       if (targetBuild == null)
       {
