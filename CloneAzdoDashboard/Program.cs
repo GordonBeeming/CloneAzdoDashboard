@@ -84,14 +84,20 @@ namespace CloneAzdoDashboard
       foreach (var widget in dashboardInfo.widgets)
       {
         WriteLine($"[{GetWidgetPositionDisplay(widget)}] {widget.name}");
+        bool processorFound = false;
         foreach (var processor in WidgetProcessors)
         {
           if (widget.contributionId.Equals(processor.ContributionId, StringComparison.InvariantCultureIgnoreCase))
           {
             WriteLine($"\tprocessing");
             processor.Run(widget, _config);
+            processorFound = true;
             continue;
           }
+        }
+        if (!processorFound)
+        {
+          WriteLine($"No processor for '{widget.contributionId}' found.", ConsoleColor.DarkYellow);
         }
       }
 
