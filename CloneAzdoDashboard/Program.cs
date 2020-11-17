@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using CloneAzdoDashboard.Tools;
 using CloneAzdoDashboard.WidgetProcessors;
 using Newtonsoft.Json;
@@ -115,12 +116,32 @@ namespace CloneAzdoDashboard
       if (_config.UpdateQueriesOnly)
       {
         WriteLine($"Skipping dashboard creation, UpdateQueriesOnly=true.");
+        WriteFileProgress($"Skipping dashboard for {_config.TargetTeamName}/{_config.TargetDashboardName}.");
       }
       else
       {
         DeleteDashboardIfExists();
         Write($"Creating dashboard '{_config.TargetDashboardName}' in the team '{_config.TargetTeamName}'...");
-        var newDashboardInfo = TfsStatic.CreateDashboard(false, _config.TargetTeamName, _config.TargetAsProject, dashboardInfo);
+        DashboardInfo newDashboardInfo;
+        int tryCount = 0;
+        while (true)
+        {
+          try
+          {
+            newDashboardInfo = TfsStatic.CreateDashboard(false, _config.TargetTeamName, _config.TargetAsProject, dashboardInfo);
+            break;
+          }
+          catch
+          {
+            tryCount++;
+            if (tryCount >= 5)
+            {
+              WriteFileProgress($"Dashboard creation failed for {_config.TargetTeamName}/{_config.TargetDashboardName}...CreateDashboard");
+              throw;
+            }
+          }
+          Thread.Sleep(2500);
+        }
         var teamNameUrl = _config.TargetTeamName.Replace(" ", "%20");
         if (newDashboardInfo.url.IndexOf(teamNameUrl) > -1)
         {
@@ -143,14 +164,51 @@ namespace CloneAzdoDashboard
       if (dashboard != null)
       {
         WriteLine($"Deleting dashboard: {dashboard.name} ({dashboard.id})", ConsoleColor.DarkYellow);
-        TfsStatic.DeleteDashboard(false, _config.TargetTeamName, _config.TargetAsProject, dashboard.id);
+        int tryCount = 0;
+        while (true)
+        {
+          try
+          {
+            TfsStatic.DeleteDashboard(false, _config.TargetTeamName, _config.TargetAsProject, dashboard.id);
+            break;
+          }
+          catch
+          {
+            tryCount++;
+            if (tryCount >= 5)
+            {
+              WriteFileProgress($"Dashboard creation failed for {_config.TargetTeamName}/{_config.TargetDashboardName}...DeleteDashboard");
+              throw;
+            }
+          }
+          Thread.Sleep(2500);
+        }
         return;
       }
     }
 
     private static bool TargetDashboardExists()
     {
-      var dashboards = TfsStatic.GetDashboards(false, _config.TargetTeamName, _config.TargetAsProject);
+      DashboardsList dashboards;
+      int tryCount = 0;
+      while (true)
+      {
+        try
+        {
+          dashboards = TfsStatic.GetDashboards(false, _config.TargetTeamName, _config.TargetAsProject);
+          break;
+        }
+        catch
+        {
+          tryCount++;
+          if (tryCount >= 5)
+          {
+            WriteFileProgress($"Dashboard creation failed for {_config.TargetTeamName}/{_config.TargetDashboardName}...GetDashboards");
+            throw;
+          }
+        }
+        Thread.Sleep(2500);
+      }
       var dashboard = dashboards.value.FirstOrDefault(o => o.name.Equals(_config.TargetDashboardName));
       return dashboard != null;
     }
@@ -316,6 +374,15 @@ namespace CloneAzdoDashboard
       WriteLine();
       WriteLine("Done!");
       //Console.ReadLine();
+    }
+
+    internal static void WriteFileProgress(string message)
+    {
+      try
+      {
+        File.AppendAllText(".\\progress.log", $"[{DateTime.UtcNow:yyyyMMdd HHmm}] {message}");
+      }
+      catch { }
     }
 
     #endregion

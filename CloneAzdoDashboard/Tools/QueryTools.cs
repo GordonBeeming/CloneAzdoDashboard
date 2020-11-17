@@ -42,6 +42,7 @@ namespace CloneAzdoDashboard.Tools
           tryCount++;
           if (tryCount >= 5)
           {
+            Program.WriteFileProgress($"Query creation failed from source query {sourceQuery.path}");
             throw;
           }
         }
