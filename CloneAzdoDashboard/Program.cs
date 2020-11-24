@@ -380,7 +380,7 @@ namespace CloneAzdoDashboard
     {
       try
       {
-        File.AppendAllText(".\\progress.log", $"[{DateTime.UtcNow:yyyyMMdd HHmm}] {message}");
+        File.AppendAllText(".\\progress.log", $"[{DateTime.UtcNow:yyyyMMdd HHmm}] {message}{Environment.NewLine}");
       }
       catch { }
     }
