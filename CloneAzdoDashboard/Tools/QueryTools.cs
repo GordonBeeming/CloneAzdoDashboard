@@ -25,8 +25,8 @@ namespace CloneAzdoDashboard.Tools
 
       sourceQuery.name = targetQueryInfo.QueryName;
       sourceQuery.path = targetQueryInfo.FolderPath;
-      FindAndReplaceInWiql(parameters, sourceQuery);
       RemoveTeamAreaId(sourceQuery);
+      FindAndReplaceInWiql(parameters, sourceQuery);
 
       WorkItemQuery result;
       int tryCount = 0;
