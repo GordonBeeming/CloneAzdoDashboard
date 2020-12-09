@@ -120,6 +120,41 @@ namespace CloneAzdoDashboard.Tools
               sourceQuery.wiql = sourceQuery.wiql.Insert(findIndex, item.Replace);
               findIndex = sourceQuery.wiql.IndexOf(item.Find, findIndex + item.Replace.Length, StringComparison.InvariantCultureIgnoreCase);
             }
+            continue;
+          }
+          if (item.TryRemoveSource)
+          {
+            var newFind = item.Find.Replace("Source.", string.Empty);
+            var newReplace = item.Replace.Replace("Source.", string.Empty);
+            if (!string.IsNullOrEmpty(newFind) && !string.IsNullOrEmpty(newReplace) &&
+              !newFind.Equals(newReplace, StringComparison.InvariantCultureIgnoreCase))
+            {
+              var findIndex = sourceQuery.wiql.IndexOf(newFind, StringComparison.InvariantCultureIgnoreCase);
+              while (findIndex > -1)
+              {
+                sourceQuery.wiql = sourceQuery.wiql.Remove(findIndex, newFind.Length);
+                sourceQuery.wiql = sourceQuery.wiql.Insert(findIndex, newReplace);
+                findIndex = sourceQuery.wiql.IndexOf(newFind, findIndex + newReplace.Length, StringComparison.InvariantCultureIgnoreCase);
+              }
+              continue;
+            }
+          }
+          if (item.TryRemoveTarget)
+          {
+            var newFind = item.Find.Replace("Target.", string.Empty);
+            var newReplace = item.Replace.Replace("Target.", string.Empty);
+            if (!string.IsNullOrEmpty(newFind) && !string.IsNullOrEmpty(newReplace) &&
+              !newFind.Equals(newReplace, StringComparison.InvariantCultureIgnoreCase))
+            {
+              var findIndex = sourceQuery.wiql.IndexOf(newFind, StringComparison.InvariantCultureIgnoreCase);
+              while (findIndex > -1)
+              {
+                sourceQuery.wiql = sourceQuery.wiql.Remove(findIndex, newFind.Length);
+                sourceQuery.wiql = sourceQuery.wiql.Insert(findIndex, newReplace);
+                findIndex = sourceQuery.wiql.IndexOf(newFind, findIndex + newReplace.Length, StringComparison.InvariantCultureIgnoreCase);
+              }
+              continue;
+            }
           }
         }
       }
