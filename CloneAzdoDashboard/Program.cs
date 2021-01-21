@@ -90,24 +90,31 @@ namespace CloneAzdoDashboard
       foreach (var widget in dashboardInfo.widgets)
       {
         WriteLine($"[{GetWidgetPositionDisplay(widget)}] {widget.name}");
-        bool processorFound = false;
-        foreach (var processor in WidgetProcessors)
+        try
         {
-          if (widget.contributionId.Equals(processor.ContributionId, StringComparison.InvariantCultureIgnoreCase))
+          bool processorFound = false;
+          foreach (var processor in WidgetProcessors)
           {
-            WriteLine($"\tprocessing");
-            processor.Run(widget, _config);
-            processorFound = true;
-            continue;
+            if (widget.contributionId.Equals(processor.ContributionId, StringComparison.InvariantCultureIgnoreCase))
+            {
+              WriteLine($"\tprocessing");
+              processor.Run(widget, _config);
+              processorFound = true;
+              continue;
+            }
+          }
+          if (!processorFound)
+          {
+            if (_config.NullSettingsWhereNoSupportedProcessorExists)
+            {
+              widget.settings = null;
+            }
+            WriteLine($"No processor for '{widget.contributionId}' found.", ConsoleColor.DarkYellow);
           }
         }
-        if (!processorFound)
+        catch (Exception ex)
         {
-          if (_config.NullSettingsWhereNoSupportedProcessorExists)
-          {
-            widget.settings = null;
-          }
-          WriteLine($"No processor for '{widget.contributionId}' found.", ConsoleColor.DarkYellow);
+          WriteFileProgress($"ERROR: {{{_config.TargetTeamName}}}[{GetWidgetPositionDisplay(widget)}] {widget.name} - {ex.Message}");
         }
       }
 
