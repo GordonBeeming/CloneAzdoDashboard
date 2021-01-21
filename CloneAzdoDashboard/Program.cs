@@ -295,7 +295,18 @@ namespace CloneAzdoDashboard
         WriteLine($"{fileName} is missing!", ConsoleColor.Red);
         return false;
       }
-      _config = JsonConvert.DeserializeObject<AppConfig>(File.ReadAllText($".\\{fileName}"));
+      var json = File.ReadAllText($".\\{fileName}");
+      try
+      {
+        _config = JsonConvert.DeserializeObject<AppConfig>(json);
+      }
+      catch
+      {
+        WriteLine(json);
+        WriteLine();
+        WriteLine();
+        throw;
+      }
 
       TfsStatic.SourceTeamProjectBaseUri = _config.SourceTeamProjectBaseUri;
       TfsStatic.TargetTeamProjectBaseUri = _config.TargetTeamProjectBaseUri;
