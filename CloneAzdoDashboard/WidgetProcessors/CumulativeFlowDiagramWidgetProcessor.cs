@@ -105,24 +105,6 @@ namespace CloneAzdoDashboard.WidgetProcessors
             desiredBoardColumnIds.Add(targetColumn.id);
           }
           settings.chartDataSettings.desiredBoardColumnIds = desiredBoardColumnIds;
-
-          var sourceLane = sourceFullBoard.rows.FirstOrDefault(o => o.id.Equals(settings.chartDataSettings.boardLane, StringComparison.OrdinalIgnoreCase));
-          if (sourceLane == null)
-          {
-            WriteWarning($"Can't find source lane id '{settings.chartDataSettings.boardLane}'.");
-          }
-          else
-          {
-            var targetLane = targetFullBoard.rows.FirstOrDefault(o => sourceLane.name == null ? o.name == null : o.name.Equals(sourceLane.name, StringComparison.OrdinalIgnoreCase));
-            if (targetLane == null)
-            {
-              WriteWarning($"Can't find target lane named '{sourceLane.name ?? "<null>"}'.");
-            }
-            else
-            {
-              settings.chartDataSettings.boardLane = targetLane.id;
-            }
-          }
         }
       }
 
