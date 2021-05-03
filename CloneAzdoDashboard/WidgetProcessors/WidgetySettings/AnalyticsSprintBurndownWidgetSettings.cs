@@ -1,4 +1,6 @@
-﻿namespace CloneAzdoDashboard.WidgetProcessors.WidgetySettings
+﻿using System;
+
+namespace CloneAzdoDashboard.WidgetProcessors.WidgetySettings
 {
   public class AnalyticsSprintBurndownWidgetSettings
   {
@@ -8,10 +10,10 @@
     public bool showNonWorkingDays { get; set; }
     public Aggregation aggregation { get; set; }
     public Workitemtypefilter workItemTypeFilter { get; set; }
-    //public Timeperiodconfiguration timePeriodConfiguration { get; set; }
+    public Timeperiodconfiguration timePeriodConfiguration { get; set; }
     public Team team { get; set; }
     public string iterationId { get; set; }
-    //public string iterationPath { get; set; }
+    public string iterationPath { get; set; }
     public bool isMinimalChart { get; set; }
     public bool isLightboxChart { get; set; }
     public bool isLegacy { get; set; }
@@ -32,8 +34,8 @@
 
   public class Timeperiodconfiguration
   {
-    public string startDate { get; set; }
-    public string endDate { get; set; }
+    public DateTime? startDate { get; set; }
+    public DateTime? endDate { get; set; }
   }
 
   public class Team

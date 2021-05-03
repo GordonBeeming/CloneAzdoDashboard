@@ -306,6 +306,19 @@ namespace CloneAzdoDashboard
       return response;
     }
 
+    public static TeamIterationList GetTeamIterations(bool source, string teamName, bool currentOnly = false)
+    {
+      var currentOnlyFilter = currentOnly ? "&$timeframe=current" : string.Empty;
+      var response = new TeamIterationList();
+      Get<TeamIterationList>(GetUrl(source, false, $"/{teamName}/_apis/work/teamsettings/iterations?api-version=6.0{currentOnlyFilter}"), GetAuthorizationHeader(source), (data) =>
+      {
+        response.count += data.count;
+        response.value.AddRange(data.value);
+        return true;
+      });
+      return response;
+    }
+
     #endregion
 
     public static string GetUrl(bool source, bool excludeProject, string uriRelativeToRoot)

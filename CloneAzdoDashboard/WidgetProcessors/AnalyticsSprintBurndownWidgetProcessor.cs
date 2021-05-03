@@ -67,6 +67,25 @@ namespace CloneAzdoDashboard.WidgetProcessors
 
       settings.team.projectId = TfsStatic.GetTeamProjectId(false);
       settings.team.teamId = targetTeamId;
+      var teamIterations = TfsStatic.GetTeamIterations(false, settings.team.teamId, true);
+      if (teamIterations.count == 0)
+      {
+        WriteWarning($"Can't find any current iterations for '{targetTeamName}', please configure this manually.");
+      }
+      else
+      {
+        settings.iterationPath = teamIterations.value[0].path;
+        settings.timePeriodConfiguration.startDate = teamIterations.value[0].attributes.startDate;
+        if (!settings.timePeriodConfiguration.startDate.HasValue)
+        {
+          WriteWarning($"startDate == null, please check @currentIteration for '{targetTeamName}'.");
+        }
+        settings.timePeriodConfiguration.endDate = teamIterations.value[0].attributes.finishDate;
+        if (!settings.timePeriodConfiguration.endDate.HasValue)
+        {
+          WriteWarning($"startDate == null, please check @currentIteration for '{targetTeamName}'.");
+        }
+      }
 
       widget.settings = JsonConvert.SerializeObject(settings);
     }

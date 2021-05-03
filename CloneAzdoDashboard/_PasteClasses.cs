@@ -19,6 +19,28 @@ namespace CloneAzdoDashboard
 
 
 
+  public class TeamIterationList
+  {
+    public int count { get; set; }
+    public List<TeamIterationList_Value> value { get; set; } = new List<TeamIterationList_Value>();
+  }
+
+  public class TeamIterationList_Value
+  {
+    public string id { get; set; }
+    public string name { get; set; }
+    public string path { get; set; }
+    public TeamIterationList_Attributes attributes { get; set; }
+    public string url { get; set; }
+  }
+
+  public class TeamIterationList_Attributes
+  {
+    public DateTime? startDate { get; set; }
+    public DateTime? finishDate { get; set; }
+    public string timeFrame { get; set; }
+  }
+
 
 
 
