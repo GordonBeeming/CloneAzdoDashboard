@@ -3,6 +3,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp3.1;net48</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors></WarningsAsErrors>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using Newtonsoft.Json;
 
 namespace CloneAzdoDashboard
 {
+#pragma warning disable IDE1006 // Naming Styles
+
   public static class TfsStatic
   {
     #region core
@@ -20,15 +23,40 @@ namespace CloneAzdoDashboard
     private static string GetAuthorizationHeaderTarget() => $"Basic {Convert.ToBase64String(Encoding.ASCII.GetBytes($":{TargetPatKey}"))}";
     private static string GetAuthorizationHeader(bool source) => source ? GetAuthorizationHeaderSource() : GetAuthorizationHeaderTarget();
 
-    private static T Get<T>(string uri, string authHeader)
+    private static T Get<T>(string uri, string authHeader, Func<T, bool>? onContinuationToken = null, string? continuationToken = null)
     {
       using (var client = new WebClient())
       {
         client.Headers[HttpRequestHeader.Authorization] = authHeader;
-        return TfsRestTry(uri, () =>
+        var thisUri = uri;
+        if (continuationToken != null)
         {
-          var responseString = client.DownloadString(uri);
-          return JsonConvert.DeserializeObject<T>(responseString);
+          thisUri += $"&continuationToken={continuationToken}";
+        }
+        return TfsRestTry(thisUri, () =>
+        {
+          var responseString = client.DownloadString(thisUri);
+          var response = JsonConvert.DeserializeObject<T>(responseString);
+          if (onContinuationToken != null)
+          {
+            if (client.ResponseHeaders?.AllKeys.Any(o => o.Equals("x-ms-continuationtoken", StringComparison.OrdinalIgnoreCase)) == true)
+            {
+              continuationToken = client.ResponseHeaders.GetValues("x-ms-continuationtoken")?
+                                                        .FirstOrDefault();
+            }
+            else
+            {
+              continuationToken = null;
+            }
+            if (onContinuationToken(response))
+            {
+              if (continuationToken != null)
+              {
+                Get<T>(uri, authHeader, onContinuationToken, continuationToken);
+              }
+            }
+          }
+          return response;
         });
       }
     }
@@ -268,7 +296,14 @@ namespace CloneAzdoDashboard
 
     public static TeamList GetTeams(bool source, string projectName)
     {
-      return Get<TeamList>(GetUrl(source, true, $"/_apis/projects/{projectName}/teams?api-version=6.0"), GetAuthorizationHeader(source));
+      var response = new TeamList();
+      Get<TeamList>(GetUrl(source, true, $"/_apis/projects/{projectName}/teams?api-version=6.0&$top=9999"), GetAuthorizationHeader(source), (data) =>
+      {
+        response.count += data.count;
+        response.value.AddRange(data.value);
+        return true;
+      });
+      return response;
     }
 
     #endregion

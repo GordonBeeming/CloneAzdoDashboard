@@ -1,7 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CloneAzdoDashboard
 {
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -25,7 +39,7 @@ namespace CloneAzdoDashboard
 
   public class TeamList
   {
-    public TeamList_Value[] value { get; set; }
+    public List<TeamList_Value> value { get; set; } = new List<TeamList_Value>();
     public int count { get; set; }
   }
 

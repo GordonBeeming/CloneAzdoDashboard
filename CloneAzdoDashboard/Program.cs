@@ -27,6 +27,7 @@ namespace CloneAzdoDashboard
       new WorkLinksWidgetProcessor(),
       new HowToLinksWidgetProcessor(),
       new IFrameWidgetProcessor(),
+      new AnalyticsSprintBurndownWidgetProcessor(),
     };
 
     static void Main(string[] args)
@@ -93,6 +94,7 @@ namespace CloneAzdoDashboard
         try
         {
           bool processorFound = false;
+          RunMarkdownReplacementsOnName(widget, _config);
           foreach (var processor in WidgetProcessors)
           {
             if (widget.contributionId.Equals(processor.ContributionId, StringComparison.InvariantCultureIgnoreCase))
@@ -161,6 +163,36 @@ namespace CloneAzdoDashboard
           WriteLine(newDashboardInfo.url.Remove(0, newDashboardInfo.url.LastIndexOf("/") + 1));
         }
         WriteLine("Done!", ConsoleColor.Green);
+      }
+    }
+
+    private static void RunMarkdownReplacementsOnName(DashboardInfo_Widget1 widget, AppConfig appConfig)
+    {
+      if (widget.isNameConfigurable)
+      {
+        var findIndex = widget.name.IndexOf(appConfig.SourceTeamName, StringComparison.InvariantCultureIgnoreCase);
+        if (findIndex > -1 && !appConfig.SourceAsProject && !appConfig.TargetAsProject)
+        {
+          widget.name = widget.name.Remove(findIndex, appConfig.SourceTeamName.Length);
+          widget.name = widget.name.Insert(findIndex, appConfig.TargetTeamName);
+        }
+
+        if (appConfig.MarkdownFindAndReplace != null)
+        {
+          foreach (var item in appConfig.MarkdownFindAndReplace)
+          {
+            if (!string.IsNullOrEmpty(item.Find) && !string.IsNullOrEmpty(item.Replace))
+            {
+              findIndex = widget.name.IndexOf(item.Find, StringComparison.InvariantCultureIgnoreCase);
+              while (findIndex > -1)
+              {
+                widget.name = widget.name.Remove(findIndex, item.Find.Length);
+                widget.name = widget.name.Insert(findIndex, item.Replace);
+                findIndex = widget.name.IndexOf(item.Find, findIndex + item.Replace.Length, StringComparison.InvariantCultureIgnoreCase);
+              }
+            }
+          }
+        }
       }
     }
 
