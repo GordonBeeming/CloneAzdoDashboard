@@ -321,6 +321,27 @@ namespace CloneAzdoDashboard
 
     #endregion
 
+    #region Team Boards
+
+    public static TeamBoardList GetTeamBoards(bool source, string teamName)
+    {
+      var response = new TeamBoardList();
+      Get<TeamBoardList>(GetUrl(source, false, $"/{teamName}/_apis/work/boards?api-version=6.0"), GetAuthorizationHeader(source), (data) =>
+      {
+        response.count += data.count;
+        response.value.AddRange(data.value);
+        return true;
+      });
+      return response;
+    }
+
+    public static TeamBoard GetTeamBoard(bool source, string teamName, string boardId)
+    {
+      return Get<TeamBoard>(GetUrl(source, false, $"/{teamName}/_apis/work/boards/{boardId}?api-version=6.0"), GetAuthorizationHeader(source));
+    }
+
+    #endregion
+
     public static string GetUrl(bool source, bool excludeProject, string uriRelativeToRoot)
     {
       var baseUri = source ? SourceTeamProjectBaseUri : TargetTeamProjectBaseUri;

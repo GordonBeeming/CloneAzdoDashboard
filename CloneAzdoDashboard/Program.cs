@@ -28,6 +28,7 @@ namespace CloneAzdoDashboard
       new HowToLinksWidgetProcessor(),
       new IFrameWidgetProcessor(),
       new AnalyticsSprintBurndownWidgetProcessor(),
+      new CumulativeFlowDiagramWidgetProcessor(),
     };
 
     static void Main(string[] args)

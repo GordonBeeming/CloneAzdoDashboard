@@ -19,6 +19,80 @@ namespace CloneAzdoDashboard
 
 
 
+
+
+
+  public class TeamBoard
+  {
+    public string id { get; set; }
+    public string url { get; set; }
+    public string name { get; set; }
+    public int revision { get; set; }
+    public List<TeamBoard_Column> columns { get; set; } = new List<TeamBoard_Column>();
+    public List<TeamBoard_Row> rows { get; set; } = new List<TeamBoard_Row>();
+    public bool isValid { get; set; }
+    public bool canEdit { get; set; }
+  }
+
+  public class TeamBoard_Column
+  {
+    public string id { get; set; }
+    public string name { get; set; }
+    public int itemLimit { get; set; }
+    public string columnType { get; set; }
+    public bool isSplit { get; set; }
+    public string description { get; set; }
+  }
+
+  public class TeamBoard_Row
+  {
+    public string id { get; set; }
+    public string? name { get; set; }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  public class TeamBoardList
+  {
+    public int count { get; set; }
+    public List<TeamBoardList_Value> value { get; set; } = new List<TeamBoardList_Value>();
+  }
+
+  public class TeamBoardList_Value
+  {
+    public string id { get; set; }
+    public string url { get; set; }
+    public string name { get; set; }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   public class TeamIterationList
   {
     public int count { get; set; }
