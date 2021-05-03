@@ -8,7 +8,9 @@ namespace CloneAzdoDashboard.Tools
 {
   public static class QueryTools
   {
-    public static WorkItemQuery CopyQuery(CopyQueryParameters parameters)
+    public static WorkItemQuery CopyQuery(CopyQueryParameters parameters,
+      string sourceProjectName, string sourceTeamName,
+      string targetProjectName, string targetTeamName)
     {
       var sourceQuery = TfsStatic.GetWorkItemQuery(true, parameters.QueryId, QueryExpand.minimal, 0);
 
@@ -26,6 +28,34 @@ namespace CloneAzdoDashboard.Tools
       sourceQuery.name = targetQueryInfo.QueryName;
       sourceQuery.path = targetQueryInfo.FolderPath;
       RemoveTeamAreaId(sourceQuery);
+      if (!string.IsNullOrEmpty(sourceProjectName) || !string.IsNullOrEmpty(sourceTeamName) ||
+          !string.IsNullOrEmpty(targetProjectName) || !string.IsNullOrEmpty(targetTeamName))
+      {
+        if (parameters.QueryReplacements == null)
+        {
+          parameters.QueryReplacements = new QueryReplacementParameters();
+        }
+        if (parameters.QueryReplacements.QueryFindAndReplace == null)
+        {
+          parameters.QueryReplacements.QueryFindAndReplace = new();
+        }
+        if (!parameters.QueryReplacements.QueryFindAndReplace.Any(o => o.Find.Equals($"[{sourceProjectName}]\\{sourceTeamName}")))
+        {
+          parameters.QueryReplacements.QueryFindAndReplace.Add(new FindAndReplace
+          {
+            Find = $"[{sourceProjectName}]\\{sourceTeamName}",
+            Replace = $"[{targetProjectName}]\\{targetTeamName}",
+          });
+        }
+        if (!parameters.QueryReplacements.QueryFindAndReplace.Any(o => o.Find.Equals($"[{sourceProjectName}]")))
+        {
+          parameters.QueryReplacements.QueryFindAndReplace.Add(new FindAndReplace
+          {
+            Find = $"[{sourceProjectName}]",
+            Replace = $"[{targetProjectName}]",
+          });
+        }
+      }
       FindAndReplaceInWiql(parameters, sourceQuery);
 
       WorkItemQuery result;
@@ -106,7 +136,7 @@ namespace CloneAzdoDashboard.Tools
 
     private static void FindAndReplaceInWiql(CopyQueryParameters parameters, WorkItemQuery sourceQuery)
     {
-      if (parameters.QueryReplacements.QueryFindAndReplace != null && parameters.QueryReplacements.QueryFindAndReplace.Length > 0)
+      if (parameters.QueryReplacements.QueryFindAndReplace != null && parameters.QueryReplacements.QueryFindAndReplace.Count > 0)
       {
         foreach (var item in parameters.QueryReplacements.QueryFindAndReplace)
         {

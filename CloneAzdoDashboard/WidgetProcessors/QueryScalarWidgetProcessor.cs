@@ -16,13 +16,17 @@ namespace CloneAzdoDashboard.WidgetProcessors
         WriteWarning("Skipped: settings == null");
         return;
       }
+      string sourceProjectName = TfsStatic.GetTeamProjectName(true);
+      string sourceTeamName = appConfig.SourceTeamName;
+      string targetProjectName = TfsStatic.GetTeamProjectName(false);
+      string targetTeamName = appConfig.TargetTeamName;
       WorkItemQuery targetQuery;
       var settings = JsonConvert.DeserializeObject<QueryScalarWidgetSettings>(widget.settings);
       targetQuery = QueryTools.CopyQuery(new CopyQueryParameters
       {
         QueryId = settings.queryId,
         QueryReplacements = appConfig.Queries,
-      });
+      }, sourceProjectName, sourceTeamName, targetProjectName, targetTeamName);
       settings.queryId = targetQuery.id;
       settings.queryName = targetQuery.name;
       widget.settings = JsonConvert.SerializeObject(settings);

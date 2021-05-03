@@ -1,10 +1,12 @@
-﻿namespace CloneAzdoDashboard.Tools.Parameters
+﻿using System.Collections.Generic;
+
+namespace CloneAzdoDashboard.Tools.Parameters
 {
   public class QueryReplacementParameters
   {
     public string PathFind { get; set; }
     public string PathReplace { get; set; }
 
-    public FindAndReplace[] QueryFindAndReplace { get; set; } = new FindAndReplace[0];
+    public List<FindAndReplace> QueryFindAndReplace { get; set; } = new List<FindAndReplace>();
   }
 }

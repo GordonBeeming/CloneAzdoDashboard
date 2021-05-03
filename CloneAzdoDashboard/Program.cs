@@ -90,7 +90,11 @@ namespace CloneAzdoDashboard
       WriteLine($"Widgets: {dashboardInfo.widgets.Length}");
       foreach (var widget in dashboardInfo.widgets)
       {
+#if DEBUG
+        WriteLine($"[{GetWidgetPositionDisplay(widget)}] {widget.name} | {widget.contributionId}");
+#else
         WriteLine($"[{GetWidgetPositionDisplay(widget)}] {widget.name}");
+#endif
         try
         {
           bool processorFound = false;
@@ -291,10 +295,18 @@ namespace CloneAzdoDashboard
         WriteLine($"{_config.Queries.PathFind} does not refer to a query folder!", ConsoleColor.Red);
         return;
       }
-      CopyQueryFolder(baseQueryFolder);
+
+      string sourceProjectName = TfsStatic.GetTeamProjectName(true);
+      string sourceTeamName = _config.SourceTeamName;
+      string targetProjectName = TfsStatic.GetTeamProjectName(false);
+      string targetTeamName = _config.TargetTeamName;
+
+      CopyQueryFolder(baseQueryFolder, sourceProjectName, sourceTeamName, targetProjectName, targetTeamName);
     }
 
-    private static void CopyQueryFolder(WorkItemQuery queryFolder)
+    private static void CopyQueryFolder(WorkItemQuery queryFolder,
+      string sourceProjectName, string sourceTeamName,
+      string targetProjectName, string targetTeamName)
     {
       WriteLine($"{queryFolder.path}");
       if (!queryFolder.isFolder || queryFolder.children.Length == 0)
@@ -304,7 +316,7 @@ namespace CloneAzdoDashboard
       foreach (var childQueryFolder in queryFolder.children.Where(o => o.isFolder))
       {
         var childQueryFolderObject = TfsStatic.GetWorkItemQuery(true, childQueryFolder.id, QueryExpand.minimal, 1);
-        CopyQueryFolder(childQueryFolderObject);
+        CopyQueryFolder(childQueryFolderObject, sourceProjectName, sourceTeamName, targetProjectName, targetTeamName);
       }
       foreach (var query in queryFolder.children.Where(o => !o.isFolder))
       {
@@ -313,7 +325,7 @@ namespace CloneAzdoDashboard
         {
           QueryId = query.id,
           QueryReplacements = _config.Queries,
-        });
+        }, sourceProjectName, sourceTeamName, targetProjectName, targetTeamName);
       }
     }
 
