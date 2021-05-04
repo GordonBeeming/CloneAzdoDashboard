@@ -29,6 +29,7 @@ namespace CloneAzdoDashboard
       new IFrameWidgetProcessor(),
       new AnalyticsSprintBurndownWidgetProcessor(),
       new CumulativeFlowDiagramWidgetProcessor(),
+      new CycleTimeWidgetProcessor(),
     };
 
     static void Main(string[] args)
