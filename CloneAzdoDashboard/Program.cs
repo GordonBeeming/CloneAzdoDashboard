@@ -30,6 +30,7 @@ namespace CloneAzdoDashboard
       new AnalyticsSprintBurndownWidgetProcessor(),
       new CumulativeFlowDiagramWidgetProcessor(),
       new CycleTimeWidgetProcessor(),
+      new VelocityWidgetProcessor(),
     };
 
     static void Main(string[] args)

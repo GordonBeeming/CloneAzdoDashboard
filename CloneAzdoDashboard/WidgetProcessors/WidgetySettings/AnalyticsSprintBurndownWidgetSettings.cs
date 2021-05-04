@@ -8,10 +8,10 @@ namespace CloneAzdoDashboard.WidgetProcessors.WidgetySettings
     public bool completedWorkEnabled { get; set; }
     public bool stackByWorkItemTypeEnabled { get; set; }
     public bool showNonWorkingDays { get; set; }
-    public Aggregation aggregation { get; set; }
-    public Workitemtypefilter workItemTypeFilter { get; set; }
-    public Timeperiodconfiguration timePeriodConfiguration { get; set; }
-    public Team team { get; set; }
+    public AnalyticsSprintBurndownWidgetSettings_Aggregation aggregation { get; set; }
+    public AnalyticsSprintBurndownWidgetSettings_WorkItemTypeFilter workItemTypeFilter { get; set; }
+    public AnalyticsSprintBurndownWidgetSettings_TimePeriodConfiguration timePeriodConfiguration { get; set; }
+    public AnalyticsSprintBurndownWidgetSettings_Team team { get; set; }
     public string iterationId { get; set; }
     public string iterationPath { get; set; }
     public bool isMinimalChart { get; set; }
@@ -20,25 +20,25 @@ namespace CloneAzdoDashboard.WidgetProcessors.WidgetySettings
     public bool isCustomized { get; set; }
   }
 
-  public class Aggregation
+  public class AnalyticsSprintBurndownWidgetSettings_Aggregation
   {
     public int identifier { get; set; }
     public string settings { get; set; }
   }
 
-  public class Workitemtypefilter
+  public class AnalyticsSprintBurndownWidgetSettings_WorkItemTypeFilter
   {
     public string identifier { get; set; }
     public string settings { get; set; }
   }
 
-  public class Timeperiodconfiguration
+  public class AnalyticsSprintBurndownWidgetSettings_TimePeriodConfiguration
   {
     public DateTime? startDate { get; set; }
     public DateTime? endDate { get; set; }
   }
 
-  public class Team
+  public class AnalyticsSprintBurndownWidgetSettings_Team
   {
     public string teamId { get; set; }
     public string projectId { get; set; }

@@ -110,7 +110,7 @@ namespace CloneAzdoDashboard.WidgetProcessors
 
       settings.chartDataSettings.project = TfsStatic.GetTeamProjectId(false);
       settings.chartDataSettings.team = targetTeamId;
-      settings.lastArtifactName.Replace(appConfig.SourceTeamName, appConfig.TargetTeamName);
+      settings.lastArtifactName?.Replace(appConfig.SourceTeamName, appConfig.TargetTeamName);
 
       widget.settings = JsonConvert.SerializeObject(settings);
     }

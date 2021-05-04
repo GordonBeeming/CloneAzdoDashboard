@@ -77,7 +77,7 @@ namespace CloneAzdoDashboard.WidgetProcessors
 
       settings.dataSettings.project = TfsStatic.GetTeamProjectId(false);
       settings.dataSettings.teamIds = newTeamIds;
-      settings.lastArtifactName.Replace(appConfig.SourceTeamName, appConfig.TargetTeamName);
+      settings.lastArtifactName?.Replace(appConfig.SourceTeamName, appConfig.TargetTeamName);
 
       widget.settings = JsonConvert.SerializeObject(settings);
     }
