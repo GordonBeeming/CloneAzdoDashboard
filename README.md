@@ -24,6 +24,8 @@ Currently the tool has explicit processors for the following widgets.
 | ms.vss-dashboards-web.Microsoft.VisualStudioOnline.Dashboards.AnalyticsSprintBurndownWidget |
 | ms.vss-dashboards-web.Microsoft.VisualStudioOnline.Dashboards.CumulativeFlowDiagramWidget |
 | ms.vss-dashboards-web.Microsoft.VisualStudioOnline.Dashboards.CycleTimeWidget |
+| ms.vss-dashboards-web.Microsoft.VisualStudioOnline.Dashboards.VelocityWidget |
+| ms.vss-dashboards-web.Microsoft.VisualStudioOnline.Dashboards.LeadTimeWidget |
 
 If no processor is found for a widget the tool will just apply the source widgets 
 against the target dashboard. Some widgets like the AssignedToMeWidget doesn't have 

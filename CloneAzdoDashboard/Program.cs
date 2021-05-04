@@ -31,6 +31,7 @@ namespace CloneAzdoDashboard
       new CumulativeFlowDiagramWidgetProcessor(),
       new CycleTimeWidgetProcessor(),
       new VelocityWidgetProcessor(),
+      new LeadTimeWidgetProcessor(),
     };
 
     static void Main(string[] args)
