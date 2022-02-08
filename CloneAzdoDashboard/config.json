@@ -4,7 +4,7 @@
   "SourcePatKey": "",
   "TargetPatKey": "",
 
-  "Mode": "Queries", // Queries or Dashboard
+  "Mode": "MoveQueries", // Queries, MoveQueries or Dashboard
 
   "SourceTeamName": "Default Team",
   "SourceDashboardName": "Focus",

@@ -18,6 +18,30 @@ namespace CloneAzdoDashboard
 
 
 
+  public class RenameQuery
+  {
+    public string name { get; set; }
+    public string path { get; set; }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

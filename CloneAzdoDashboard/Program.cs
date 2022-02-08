@@ -49,6 +49,10 @@ namespace CloneAzdoDashboard
       {
         MigrateQueries();
       }
+      else if (_config.Mode == Config.MigrationModes.MoveQueries)
+      {
+        MoveQueries();
+      }
       else
       {
         WriteLine("Mode not set!", ConsoleColor.DarkYellow);
@@ -330,6 +334,80 @@ namespace CloneAzdoDashboard
           QueryId = query.id,
           QueryReplacements = _config.Queries,
         }, sourceProjectName, sourceTeamName, targetProjectName, targetTeamName);
+      }
+    }
+
+    #endregion
+
+    #region Move Queries
+
+    private static void MoveQueries()
+    {
+      if (string.IsNullOrEmpty(_config.Queries.PathFind))
+      {
+        WriteLine($"{nameof(AppConfig.Queries)}.{nameof(AppConfig.Queries.PathFind)} is missing for Query Migration!", ConsoleColor.Red);
+        return;
+      }
+      if (string.IsNullOrEmpty(_config.Queries.PathReplace))
+      {
+        WriteLine($"{nameof(AppConfig.Queries)}.{nameof(AppConfig.Queries.PathReplace)} is missing for Query Migration!", ConsoleColor.Red);
+        return;
+      }
+
+      WorkItemQuery sourceQueryFolder;
+      try
+      {
+        sourceQueryFolder = TfsStatic.GetWorkItemQuery(true, _config.Queries.PathFind, QueryExpand.minimal, 1);
+        if (!sourceQueryFolder.isFolder)
+        {
+          WriteLine($"{_config.Queries.PathFind} does not refer to a query folder!", ConsoleColor.Red);
+          return;
+        }
+      }
+      catch
+      {
+        WriteLine($"{_config.Queries.PathFind} does not refer to a query folder!", ConsoleColor.Red);
+        return;
+      }
+
+      try
+      {
+        var targetQueryFolder = TfsStatic.GetWorkItemQuery(true, _config.Queries.PathReplace, QueryExpand.minimal, 1);
+        if (!targetQueryFolder.isFolder)
+        {
+          WriteLine($"{_config.Queries.PathReplace} does not refer to a query folder!", ConsoleColor.Red);
+          return;
+        }
+      }
+      catch
+      {
+        WriteLine($"{_config.Queries.PathReplace} does not refer to a query folder!", ConsoleColor.Red);
+        return;
+      }
+
+      string projectName = TfsStatic.GetTeamProjectName(true);
+
+      MoveQueryFolderQueries(sourceQueryFolder, _config.Queries.PathReplace, projectName);
+    }
+
+    private static void MoveQueryFolderQueries(WorkItemQuery queryFolder,
+      string targetFolder, string projectName)
+    {
+      WriteLine($"{queryFolder.path}");
+      if (!queryFolder.isFolder || queryFolder.children.Length == 0)
+      {
+        return;
+      }
+      foreach (var query in queryFolder.children.Where(o => !o.isFolder))
+      {
+        WriteLine($"\t- {query.name}");
+        TfsStatic.RenameWorkItemQuery(true, query.id, $"{targetFolder}/{query.name}");
+      }
+      foreach (var childQueryFolder in queryFolder.children.Where(o => o.isFolder))
+      {
+        var childQueryFolderObject = TfsStatic.GetWorkItemQuery(true, childQueryFolder.id, QueryExpand.minimal, 1);
+        TfsStatic.CreateWorkItemQueryFolder(true, targetFolder, childQueryFolderObject.name);
+        MoveQueryFolderQueries(childQueryFolderObject, $"{targetFolder}/{childQueryFolderObject.name}", projectName);
       }
     }
 

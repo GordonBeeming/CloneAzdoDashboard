@@ -4,5 +4,6 @@
   {
     Dashboard = 0,
     Queries = 1,
+    MoveQueries = 2,
   }
 }

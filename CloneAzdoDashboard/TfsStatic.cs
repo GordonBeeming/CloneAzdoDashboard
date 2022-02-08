@@ -276,6 +276,16 @@ namespace CloneAzdoDashboard
       return Patch<WorkItemQuery>(GetUrl(source, false, $"/_apis/wit/queries/{workItemQuery.id}?api-version=6.0"), workItemQuery, GetAuthorizationHeader(source));
     }
 
+    public static WorkItemQuery RenameWorkItemQuery(bool source, string queryId, string queryPath)
+    {
+      var request = new RenameQuery
+      {
+        name = queryPath.Remove(0, queryPath.LastIndexOf('/') + 1),
+        path= queryPath,
+      };
+      return Patch<WorkItemQuery>(GetUrl(source, false, $"/_apis/wit/queries/{queryId}?api-version=6.0"), request, GetAuthorizationHeader(source));
+    }
+
     //public static void DeleteDashboard(bool source, string teamName, string dashboardId)
     //{
     //  Delete(GetUrl(source, false, $"/{teamName}/_apis/dashboard/dashboards/{dashboardId}?api-version=6.0-preview.3"), null, GetAuthorizationHeader(source));
